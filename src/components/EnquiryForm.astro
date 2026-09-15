@@ -31,6 +31,11 @@ const portalId = import.meta.env.PUBLIC_HUBSPOT_PORTAL_ID ?? '';
 const formGuid = import.meta.env.PUBLIC_HUBSPOT_FORM_GUID ?? '';
 const configured = Boolean(portalId && formGuid);
 
+// The env vars aren't set in CI either, so an unconfigured build ships to real
+// visitors. They get a plain "email us instead"; the setup instructions are for
+// whoever is running the dev server.
+const showSetupHint = !configured && import.meta.env.DEV;
+
 // Mirrors the "Choose Your Service" options on the current site.
 const enquiryTypes = [
   'Bush Kinder',
@@ -132,11 +137,19 @@ const id = (name: string) => `${uid}-${name}`;
 
   <p class="enquiry__status" data-status role="status" aria-live="polite"></p>
 
-  {!configured && (
+  {showSetupHint && (
     <p class="enquiry__warn">
       <strong>Not wired up yet.</strong> Add <code>PUBLIC_HUBSPOT_PORTAL_ID</code> and
-      <code>PUBLIC_HUBSPOT_FORM_GUID</code> to <code>.env</code>. Until then this form
-      won't send{site.email && <> — people can still reach us at <a href={`mailto:${site.email}`}>{site.email}</a></>}.
+      <code>PUBLIC_HUBSPOT_FORM_GUID</code> to <code>.env</code>. Visitors don't see this
+      notice — in a production build they get a plain fallback instead.
+    </p>
+  )}
+
+  {!configured && !import.meta.env.DEV && site.email && (
+    <p class="enquiry__fallback">
+      Our form is being set up. In the meantime, email us at{' '}
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      {site.phone && <> or call {site.phone}</>}.
     </p>
   )}
 </form>
@@ -243,6 +256,12 @@ const id = (name: string) => `${uid}-${name}`;
     border-radius: var(--radius);
     font-size: 0.875rem;
   }
+  .enquiry__fallback {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+  }
+
   .enquiry__warn code { font-size: 0.8125rem; background: rgba(0, 0, 0, 0.06); padding: 0.1em 0.35em; border-radius: 3px; }
 
   .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }

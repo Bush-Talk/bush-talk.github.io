@@ -93,21 +93,8 @@ const pillars = await Promise.all(
 
   <Testimonials heading="Reviews" featuredOnly showLink />
 
-  <section class="section section--bark">
-    <div class="shell shell--centered closing">
-      <h2>{home.closingHeading}</h2>
-      <p class="lede">{home.closingText}</p>
-      {home.closingCta.label && (
-        <div class="btn-row">
-          <a class="btn btn--primary" href={home.closingCta.href || '/contact'}>
-            {home.closingCta.label}
-          </a>
-        </div>
-      )}
-    </div>
-  </section>
 
-  <ContactCta />
+  <ContactCta heading={home.closingHeading} text={home.closingText} />
 </BaseLayout>
 
 <style>
@@ -185,7 +172,4 @@ const pillars = await Promise.all(
   }
 
   @media (max-width: 52rem) {
-    .closing { text-align: center; }
-  .closing p { margin-inline: auto; }
-  .closing .btn-row { justify-content: center; }
-</style>
+  </style>
