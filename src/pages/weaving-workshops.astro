@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import ContactCta from '../components/ContactCta.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Gallery from '../components/Gallery.astro';
 import WorkshopCard from '../components/shared/WorkshopCard';
@@ -114,6 +115,8 @@ const imgFor = (id: string) => rendered.find((r) => r.entry.id === id)?.img;
       </div>
     </section>
   )}
+
+  <ContactCta />
 </BaseLayout>
 
 <style>

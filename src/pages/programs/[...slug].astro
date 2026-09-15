@@ -6,14 +6,21 @@ import SmartImage from '../../components/SmartImage.astro';
 import { site } from '../../lib/site';
 
 export const getStaticPaths = (async () => {
-  const programs = await getCollection('programs', ({ data }) => !data.draft);
+  const programs = (await getCollection('programs', ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order,
+  );
+
   return programs.map((program) => ({
     params: { slug: program.id },
-    props: { program },
+    props: {
+      program,
+      // Everything else, in order, wrapping around from this one.
+      others: programs.filter((p) => p.id !== program.id),
+    },
   }));
 }) satisfies GetStaticPaths;
 
-const { program } = Astro.props;
+const { program, others } = Astro.props;
 const { Content } = await render(program);
 const { title, summary, image, imageAlt, price, duration, audience, includes } = program.data;
 
@@ -83,6 +90,24 @@ const facts = [
         </div>
       </aside>
     </div>
+
+    {others.length > 0 && (
+      <section class="section section--warm more">
+        <div class="shell">
+          <h2>Other programs</h2>
+          <ul class="more__list">
+            {others.map((other) => (
+              <li>
+                <a href={`/programs/${other.id}`}>
+                  <span class="more__title">{other.data.title}</span>
+                  <span class="more__summary">{other.data.summary}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
   </article>
 </BaseLayout>
 
@@ -149,4 +174,38 @@ const facts = [
   .aside__cta { border-top: 1px solid var(--line); padding-top: 1.5rem; }
   .aside__cta > p:first-child { font-size: 0.9375rem; margin-bottom: 0.9rem; }
   .aside__alt { font-size: 0.875rem; color: var(--ink-soft); margin: 1rem 0 0; }
+
+  .more__list {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .more__list a {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.25rem 0;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid var(--line);
+    height: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .more__list li + li a { border-left: 1px solid var(--line); padding-left: 1.5rem; }
+    .more__list li:not(:last-child) a { padding-right: 1.5rem; }
+  }
+
+  .more__title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--bark);
+  }
+  .more__list a:hover .more__title { color: var(--clay-deep); }
+
+  .more__summary { font-size: 0.875rem; color: var(--ink-soft); line-height: 1.5; }
 </style>

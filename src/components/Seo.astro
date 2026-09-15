@@ -1,0 +1,47 @@
+---
+import { getImage } from 'astro:assets';
+import { resolveImage } from '../lib/images';
+import { site } from '../lib/site';
+import ogDefault from '../assets/uploads/og-default.jpg';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: URL;
+  /** A content image path; falls back to the site-wide social card. */
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description, canonical, image, type = 'website' } = Astro.props;
+
+/**
+ * Social images must be absolute URLs pointing at a file that actually ships.
+ * Content stores source paths like "/src/assets/uploads/x.webp", which exist in
+ * the repo but never in dist/ — emitting those directly gives every share a
+ * broken preview. So resolve through the optimiser and absolutise.
+ */
+const source = resolveImage(image) ?? ogDefault;
+const social = await getImage({ src: source, width: 1200, height: 630, fit: 'cover', format: 'jpeg' });
+const socialUrl = new URL(social.src, canonical);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="en_AU" />
+<meta property="og:image" content={socialUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialUrl} />

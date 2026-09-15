@@ -159,6 +159,9 @@
 /* --- footer --------------------------------------------------------------- */
 
 .site-footer {
+  /* Keeps a band of paper between the last section and the footer. Without it
+     a dark closing section and the dark footer read as one shapeless block. */
+  margin-top: var(--step);
   background: var(--bark);
   color: var(--sage-pale);
   padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ContactCta from '../components/ContactCta.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Quote from '../components/shared/Quote';
 
@@ -40,6 +41,8 @@ const sections = groups
       ))}
     </div>
   </section>
+
+  <ContactCta />
 </BaseLayout>
 
 <style>

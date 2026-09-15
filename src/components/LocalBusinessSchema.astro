@@ -1,0 +1,36 @@
+---
+import { site } from '../lib/site';
+
+/**
+ * Structured data for local search. Programs run in specific Melbourne suburbs,
+ * so telling Google that explicitly is worth more here than any on-page tweak.
+ */
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  ...(site.email && { email: site.email }),
+  ...(site.phone && { telephone: site.phoneHref || site.phone }),
+  ...(site.social.length && { sameAs: site.social.map((s) => s.url) }),
+  image: new URL('/apple-touch-icon.png', site.url).href,
+  areaServed: site.locations.map((name) => ({ '@type': 'Place', name })),
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: 'VIC',
+    addressCountry: 'AU',
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+      opens: '09:00',
+      closes: '17:00',
+    },
+  ],
+  founder: { '@type': 'Person', name: site.contactName },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
