@@ -57,6 +57,7 @@
   --font-body: 'Quicksand Variable', 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --measure: 66ch;
+  --reading: 760px;
   --shell: 1120px;
   --gutter: clamp(1.25rem, 5vw, 3rem);
 
@@ -142,7 +143,14 @@ hr { border: 0; border-top: 1px solid var(--line); margin: var(--step) 0; }
   padding-inline: var(--gutter);
 }
 
-.shell--narrow { max-width: 760px; }
+/* A narrow READING column, not a narrower page. Re-centring a 760px box inside
+   a 1120px shell pushed page headings 180px inboard of the logo above them and
+   the cards below — so this keeps the shell's left edge and limits the content
+   instead. */
+.shell--narrow > * { max-width: var(--reading); }
+
+/* For blocks that genuinely are meant to be centred, like a closing CTA. */
+.shell--centered { max-width: var(--reading); margin-inline: auto; }
 
 .section { padding-block: var(--step); }
 .section--warm { background: var(--paper-warm); }
