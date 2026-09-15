@@ -73,6 +73,11 @@ collections:
         widget: list
         required: false
         field: { name: item, label: Item, widget: string }
+      - name: showOnHome
+        label: Show on the home page
+        widget: boolean
+        default: true
+        hint: Unticked keeps it on the Programs page but off the home page.
       - name: draft
         label: Draft
         widget: boolean
@@ -254,6 +259,21 @@ collections:
               - { name: label, label: Name, widget: string }
               - { name: url, label: URL, widget: string }
 
+      - name: weaving
+        label: Weaving Workshops page
+        file: src/data/weaving.json
+        fields:
+          - { name: eyebrow, label: Small heading above the title, widget: string }
+          - { name: heading, label: Page heading, widget: string }
+          - { name: intro, label: Intro paragraph, widget: text }
+          - name: pullQuote
+            label: Pull quote
+            widget: string
+            required: false
+            hint: Shown large under the intro. Leave empty to hide it.
+          - { name: image, label: Image, widget: image, required: false }
+          - { name: imageAlt, label: Image description, widget: string, required: false }
+
       - name: home
         label: Home page
         file: src/data/home.json
@@ -264,16 +284,9 @@ collections:
           - { name: heroText, label: Intro paragraph, widget: text }
           - { name: heroImage, label: Hero image, widget: image, required: false }
           - { name: heroImageAlt, label: Hero image description, widget: string, required: false }
-          - name: primaryCta
-            label: Main button
-            widget: object
-            fields:
-              - { name: label, label: Button text, widget: string }
-              - { name: href, label: Links to, widget: string }
-          - name: secondaryCta
-            label: Second button
-            widget: object
-            required: false
+          - name: heroLinks
+            label: Service buttons under the hero
+            widget: list
             fields:
               - { name: label, label: Button text, widget: string }
               - { name: href, label: Links to, widget: string }
@@ -291,21 +304,6 @@ collections:
 
           - { name: programsHeading, label: 'Section 3: heading', widget: string }
           - { name: programsIntro, label: 'Section 3: intro', widget: text, required: false }
-
-          - { name: featureHeading, label: 'Section 4: heading', widget: string }
-          - { name: featureText, label: 'Section 4: text', widget: text }
-          - { name: featureImage, label: 'Section 4: image', widget: image, required: false }
-          - name: featureImageAlt
-            label: 'Section 4: image description'
-            widget: string
-            required: false
-            hint: Describes the image for people using a screen reader.
-          - name: featureCta
-            label: 'Section 4: button'
-            widget: object
-            fields:
-              - { name: label, label: Button text, widget: string }
-              - { name: href, label: Links to, widget: string }
 
           - { name: closingHeading, label: 'Closing: heading', widget: string }
           - { name: closingText, label: 'Closing: text', widget: text }

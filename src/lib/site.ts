@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import siteData from '../data/site.json';
 import homeData from '../data/home.json';
+import weavingData from '../data/weaving.json';
 import { blankable, text, softEmail, softUrl } from './schema';
 
 /**
@@ -50,8 +51,8 @@ const homeSchema = z.object({
   heroText: text,
   heroImage: text,
   heroImageAlt: text,
-  primaryCta: linkSchema,
-  secondaryCta: blankable(linkSchema),
+  /* The three service buttons under the hero. */
+  heroLinks: z.array(linkSchema).catch([]).default([]),
 
   pillarsHeading: text,
   pillarsIntro: text,
@@ -60,19 +61,26 @@ const homeSchema = z.object({
   programsHeading: text,
   programsIntro: text,
 
-  featureHeading: text,
-  featureText: text,
-  featureImage: text,
-  featureImageAlt: text,
-  featureCta: linkSchema,
-
   closingHeading: text,
   closingText: text,
   closingCta: linkSchema,
 });
 
+/** Weaving has its own page now, so it has its own copy rather than borrowing
+ *  the home page's feature section. */
+const weavingSchema = z.object({
+  eyebrow: text,
+  heading: text,
+  intro: text,
+  pullQuote: text,
+  image: text,
+  imageAlt: text,
+});
+
 export const site = siteSchema.parse(siteData);
 export const home = homeSchema.parse(homeData);
+export const weaving = weavingSchema.parse(weavingData);
 
 export type Site = z.infer<typeof siteSchema>;
 export type Home = z.infer<typeof homeSchema>;
+export type Weaving = z.infer<typeof weavingSchema>;

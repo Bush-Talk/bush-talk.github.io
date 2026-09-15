@@ -42,7 +42,7 @@ const { Content } = await render(page);
     </div>
   </section>
 
-  <ContactCta />
+  {page.data.enquiryForm && <ContactCta />}
 </BaseLayout>
 
 <style>

@@ -5,14 +5,20 @@
   "heroText": "Bush Talk offers immersive nature-based experiences that nurture self-discovery, resilience, and deep connection with others. We provide a supportive space for personal growth and community, empowering individuals to rediscover their sense of belonging and connection with the natural world, the land we live on.",
   "heroImage": "/src/assets/uploads/hero-oak-tree.webp",
   "heroImageAlt": "A vast old oak with a bench beneath its spreading branches",
-  "primaryCta": {
-    "label": "Book Now",
-    "href": "/contact"
-  },
-  "secondaryCta": {
-    "label": "Explore programs",
-    "href": "/programs"
-  },
+  "heroLinks": [
+    {
+      "label": "Bush Talk Programs",
+      "href": "/programs"
+    },
+    {
+      "label": "Weaving Workshops",
+      "href": "/weaving-workshops"
+    },
+    {
+      "label": "Individual Support",
+      "href": "/programs/individual-sessions"
+    }
+  ],
   "pillarsHeading": "Enhancing Whole-Person Development",
   "pillarsIntro": "",
   "pillars": [
@@ -37,18 +43,10 @@
   ],
   "programsHeading": "Flexible Learning Programs",
   "programsIntro": "All programs are designed to be flexible, so together we can design the best fit for your kinder, school, group or family.",
-  "featureHeading": "Healing Art and Earth Wisdom for Young Minds",
-  "featureText": "Our incursions invite the sanctuary of the Australian bush into schools and community centers. Through immersive workshops, we guide children in the meditative craft of fiber weaving and ecological storytelling. By engaging with natural materials, students cultivate a deep sense of wellbeing, patience, and a lasting connection to the environment around them.",
-  "featureCta": {
-    "label": "See weaving workshops",
-    "href": "/weaving-workshops"
-  },
   "closingHeading": "Connect With Nature",
   "closingText": "Ready to weave new stories or embark on a bush adventure? Reach out for workshop registrations, educational incursions, or custom programs.",
   "closingCta": {
     "label": "Send a Message",
     "href": "/contact"
-  },
-  "featureImage": "/src/assets/uploads/wix-enhancing-whole-person-development.webp",
-  "featureImageAlt": "Green fibres being woven on an upright loom"
+  }
 }

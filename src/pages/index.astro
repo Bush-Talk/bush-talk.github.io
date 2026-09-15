@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ContactCta from '../components/ContactCta.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProgramCard from '../components/ProgramCard.astro';
 import SmartImage from '../components/SmartImage.astro';
@@ -8,7 +9,8 @@ import { toImg } from '../lib/images';
 import Testimonials from '../components/Testimonials.astro';
 import { home } from '../lib/site';
 
-const programs = (await getCollection('programs', ({ data }) => !data.draft)).sort(
+// showOnHome lets Bek pull a program off the home page without unpublishing it.
+const programs = (await getCollection('programs', ({ data }) => !data.draft && data.showOnHome)).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
@@ -33,18 +35,6 @@ const pillars = await Promise.all(
         <h1>{home.heroHeading}</h1>
         {home.heroSubheading && <p class="hero__sub">{home.heroSubheading}</p>}
         <p class="hero__text">{home.heroText}</p>
-        <div class="btn-row">
-          {home.primaryCta.label && (
-            <a class="btn btn--flame" href={home.primaryCta.href || '/contact'}>
-              {home.primaryCta.label}
-            </a>
-          )}
-          {home.secondaryCta?.label && (
-            <a class="btn btn--secondary" href={home.secondaryCta.href || '/'}>
-              {home.secondaryCta.label}
-            </a>
-          )}
-        </div>
       </div>
 
       <div class="hero__media">
@@ -58,6 +48,14 @@ const pillars = await Promise.all(
         />
       </div>
     </div>
+
+    {home.heroLinks.length > 0 && (
+      <nav class="shell hero__links" aria-label="Our services">
+        {home.heroLinks.map((link) => (
+          <a class="btn btn--primary" href={link.href}>{link.label}</a>
+        ))}
+      </nav>
+    )}
   </section>
 
   <section class="section">
@@ -92,31 +90,6 @@ const pillars = await Promise.all(
     </section>
   )}
 
-  <section class="section feature">
-    <div class="shell feature__inner">
-      <div class="feature__media">
-        <SmartImage
-          src={home.featureImage}
-          alt={home.featureImageAlt}
-          widths={[400, 640, 900]}
-          sizes="(max-width: 52rem) 100vw, 420px"
-          aspect="1"
-        />
-      </div>
-      <div class="feature__copy">
-        <p class="eyebrow">Weaving Workshops</p>
-        <h2>{home.featureHeading}</h2>
-        <p>{home.featureText}</p>
-        {home.featureCta.label && (
-          <div class="btn-row">
-            <a class="btn btn--secondary" href={home.featureCta.href || '/weaving-workshops'}>
-              {home.featureCta.label}
-            </a>
-          </div>
-        )}
-      </div>
-    </div>
-  </section>
 
   <Testimonials heading="Reviews" featuredOnly showLink />
 
@@ -133,6 +106,8 @@ const pillars = await Promise.all(
       )}
     </div>
   </section>
+
+  <ContactCta />
 </BaseLayout>
 
 <style>
@@ -163,6 +138,19 @@ const pillars = await Promise.all(
   }
 
   .hero__text { color: var(--ink-soft); }
+
+  .hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .hero__links .btn { flex: 1 1 auto; justify-content: center; min-width: 14rem; }
+
+  @media (max-width: 40rem) {
+    .hero__links .btn { flex-basis: 100%; }
+  }
 
   /* Arched top, echoing the doorway shape on the current site. */
   .hero__media :global(img),
@@ -196,31 +184,8 @@ const pillars = await Promise.all(
     margin-top: 2.5rem;
   }
 
-  .feature__inner {
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
-  }
-
   @media (max-width: 52rem) {
-    .feature__inner { grid-template-columns: 1fr; }
-  }
-
-  .feature__media :global(img),
-  .feature__media :global(.placeholder) {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: var(--radius-arch);
-  }
-
-  @media (max-width: 52rem) {
-    .feature__media :global(img),
-    .feature__media :global(.placeholder) { aspect-ratio: 16 / 9; }
-  }
-
-  .closing { text-align: center; }
+    .closing { text-align: center; }
   .closing p { margin-inline: auto; }
   .closing .btn-row { justify-content: center; }
 </style>

@@ -10,9 +10,22 @@ import { site } from '../lib/site';
  *   PUBLIC_HUBSPOT_PORTAL_ID
  *   PUBLIC_HUBSPOT_FORM_GUID
  *
- * The `enquiry_type` field is a custom contact property — create it in HubSpot
- * (Settings → Properties) with matching internal values, or drop the field.
+ * Two variants:
+ *   full     — the contact page. Everything HubSpot can usefully capture.
+ *   minimal  — the bottom of every other page. Name, email, message.
+ *
+ * Both post identically, so there's one script and one place to change it.
+ * Field ids are namespaced per instance because a page can hold more than one.
  */
+
+interface Props {
+  variant?: 'full' | 'minimal';
+  /** Preselects the service, e.g. on the weaving page. */
+  topic?: string;
+}
+
+const { variant = 'full', topic } = Astro.props;
+const full = variant === 'full';
 
 const portalId = import.meta.env.PUBLIC_HUBSPOT_PORTAL_ID ?? '';
 const formGuid = import.meta.env.PUBLIC_HUBSPOT_FORM_GUID ?? '';
@@ -27,75 +40,94 @@ const enquiryTypes = [
   'Individual sessions',
   'Weaving workshop',
 ];
+
+// Unique per instance so labels bind to the right input when two forms coexist.
+const uid = `enq-${Math.random().toString(36).slice(2, 8)}`;
+const id = (name: string) => `${uid}-${name}`;
 ---
 
 <form
-  class="enquiry"
-  id="enquiry-form"
+  class:list={['enquiry', !full && 'enquiry--minimal']}
+  data-enquiry
   data-portal-id={portalId}
   data-form-guid={formGuid}
   novalidate
 >
-  <div class="enquiry__grid">
-    <p class="field">
-      <label for="firstname">First name <span aria-hidden="true">*</span></label>
-      <input type="text" id="firstname" name="firstname" autocomplete="given-name" required />
-    </p>
+  {full ? (
+    <div class="enquiry__grid">
+      <p class="field">
+        <label for={id('firstname')}>First name <span aria-hidden="true">*</span></label>
+        <input type="text" id={id('firstname')} name="firstname" autocomplete="given-name" required />
+      </p>
+      <p class="field">
+        <label for={id('lastname')}>Last name <span aria-hidden="true">*</span></label>
+        <input type="text" id={id('lastname')} name="lastname" autocomplete="family-name" required />
+      </p>
+      <p class="field">
+        <label for={id('email')}>Email <span aria-hidden="true">*</span></label>
+        <input type="email" id={id('email')} name="email" autocomplete="email" required />
+      </p>
+      <p class="field">
+        <label for={id('phone')}>Phone <span class="field__hint">optional</span></label>
+        <input type="tel" id={id('phone')} name="phone" autocomplete="tel" />
+      </p>
+      <p class="field">
+        <label for={id('company')}>Organisation <span class="field__hint">optional</span></label>
+        <input type="text" id={id('company')} name="company" autocomplete="organization" />
+      </p>
+      <p class="field">
+        <label for={id('preferred_date')}>Preferred date <span class="field__hint">optional</span></label>
+        <input type="date" id={id('preferred_date')} name="preferred_date" />
+      </p>
+    </div>
+  ) : (
+    <div class="enquiry__grid">
+      <p class="field">
+        <label for={id('name')}>Your name <span aria-hidden="true">*</span></label>
+        <input type="text" id={id('name')} name="name" autocomplete="name" required />
+      </p>
+      <p class="field">
+        <label for={id('email')}>Email <span aria-hidden="true">*</span></label>
+        <input type="email" id={id('email')} name="email" autocomplete="email" required />
+      </p>
+    </div>
+  )}
 
+  {full && (
     <p class="field">
-      <label for="lastname">Last name <span aria-hidden="true">*</span></label>
-      <input type="text" id="lastname" name="lastname" autocomplete="family-name" required />
+      <label for={id('enquiry_type')}>Choose your service</label>
+      <select id={id('enquiry_type')} name="enquiry_type">
+        <option value="">Choose one…</option>
+        {enquiryTypes.map((type) => <option value={type}>{type}</option>)}
+      </select>
     </p>
+  )}
 
-    <p class="field">
-      <label for="email">Email <span aria-hidden="true">*</span></label>
-      <input type="email" id="email" name="email" autocomplete="email" required />
-    </p>
-
-    <p class="field">
-      <label for="phone">Phone <span class="field__hint">optional</span></label>
-      <input type="tel" id="phone" name="phone" autocomplete="tel" />
-    </p>
-
-    <p class="field">
-      <label for="company">Organisation <span class="field__hint">optional</span></label>
-      <input type="text" id="company" name="company" autocomplete="organization" />
-    </p>
-
-    <p class="field">
-      <label for="preferred_date">Preferred date <span class="field__hint">optional</span></label>
-      <input type="date" id="preferred_date" name="preferred_date" />
-    </p>
-  </div>
+  {/* On a topic-specific page the service is already known. */}
+  {!full && topic && <input type="hidden" name="enquiry_type" value={topic} />}
 
   <p class="field">
-    <label for="enquiry_type">Choose your service</label>
-    <select id="enquiry_type" name="enquiry_type">
-      <option value="">Choose one…</option>
-      {enquiryTypes.map((type) => <option value={type}>{type}</option>)}
-    </select>
-  </p>
-
-  <p class="field">
-    <label for="message">How can we help you? <span aria-hidden="true">*</span></label>
-    <textarea id="message" name="message" rows="6" required></textarea>
+    <label for={id('message')}>
+      {full ? 'How can we help you?' : 'What would you like to know?'} <span aria-hidden="true">*</span>
+    </label>
+    <textarea id={id('message')} name="message" rows={full ? 6 : 4} required></textarea>
   </p>
 
   <p class="field field--check">
-    <input type="checkbox" id="consent" name="consent" required />
-    <label for="consent">
+    <input type="checkbox" id={id('consent')} name="consent" required />
+    <label for={id('consent')}>
       I'm happy for {site.name} to store these details and get back to me about my enquiry.
     </label>
   </p>
 
   {/* Honeypot. Real people never fill this in; bots usually do. */}
   <p class="enquiry__trap" aria-hidden="true">
-    <label for="company_website">Leave this field empty</label>
-    <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off" />
+    <label for={id('company_website')}>Leave this field empty</label>
+    <input type="text" id={id('company_website')} name="company_website" tabindex="-1" autocomplete="off" />
   </p>
 
   <div class="btn-row">
-    <button class="btn btn--primary" type="submit" data-submit>Send enquiry</button>
+    <button class="btn btn--flame" type="submit" data-submit>Send enquiry</button>
   </div>
 
   <p class="enquiry__status" data-status role="status" aria-live="polite"></p>
@@ -119,6 +151,7 @@ const enquiryTypes = [
 
 <style>
   .enquiry { max-width: 640px; }
+  .enquiry--minimal { max-width: 34rem; }
 
   .enquiry__grid {
     display: grid;
@@ -131,7 +164,7 @@ const enquiryTypes = [
   .field label {
     display: block;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 0.4rem;
   }
 
@@ -154,19 +187,18 @@ const enquiryTypes = [
     transition: border-color 140ms ease;
   }
 
-  .field textarea { resize: vertical; min-height: 8rem; }
+  .field input[type='date'] { min-height: 2.9rem; }
+  .field textarea { resize: vertical; min-height: 6rem; }
 
   .field input:hover,
   .field select:hover,
   .field textarea:hover { border-color: var(--ink-faint); }
 
-  .field input[type='date'] { min-height: 2.9rem; }
-
   .field input:focus-visible,
   .field select:focus-visible,
-  .field textarea:focus-visible { border-color: var(--clay); }
+  .field textarea:focus-visible { border-color: var(--clay-deep); }
 
-  .field [aria-invalid='true'] { border-color: var(--clay-deep); }
+  .field [aria-invalid='true'] { border-color: var(--clay-darker); }
 
   .field--check {
     display: grid;
@@ -174,13 +206,13 @@ const enquiryTypes = [
     gap: 0.7rem;
     align-items: start;
   }
-  .field--check input { margin-top: 0.3rem; width: 1rem; height: 1rem; accent-color: var(--bark); }
+  .field--check input { margin-top: 0.3rem; width: 1rem; height: 1rem; accent-color: var(--sage-deep); }
   .field--check label { font-weight: 400; font-size: 0.9375rem; margin: 0; }
 
   .enquiry__error {
     display: block;
     font-size: 0.8125rem;
-    color: var(--clay-deep);
+    color: var(--clay-darker);
     margin-top: 0.35rem;
   }
 
@@ -201,31 +233,38 @@ const enquiryTypes = [
     font-size: 0.9375rem;
   }
   .enquiry__status[data-state='ok'] { background: var(--sage-pale); color: var(--bark-deep); }
-  .enquiry__status[data-state='error'] { background: #f7e2d8; color: var(--clay-deep); }
+  .enquiry__status[data-state='error'] { background: var(--clay-pale); color: var(--clay-darker); }
 
   .enquiry__warn {
     margin-top: 1.5rem;
     padding: 0.9rem 1.1rem;
-    background: var(--paper-deep);
-    border-left: 3px solid var(--ochre);
+    background: var(--sand);
+    border-left: 3px solid var(--clay);
     border-radius: var(--radius);
     font-size: 0.875rem;
   }
   .enquiry__warn code { font-size: 0.8125rem; background: rgba(0, 0, 0, 0.06); padding: 0.1em 0.35em; border-radius: 3px; }
+
+  .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
 </style>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>('#enquiry-form');
+  /** HubSpot ties a submission to its analytics session via this cookie. */
+  const readHutk = () =>
+    document.cookie.split('; ').find((c) => c.startsWith('hubspotutk='))?.split('=')[1];
 
-  if (form) {
+  /** A single "Your name" field still wants to land as first/last in the CRM. */
+  const splitName = (value: string) => {
+    const parts = value.trim().split(/\s+/);
+    if (parts.length < 2) return { firstname: parts[0] ?? '', lastname: '' };
+    return { firstname: parts.slice(0, -1).join(' '), lastname: parts.at(-1)! };
+  };
+
+  // Several forms can share a page, so wire each one rather than a single id.
+  document.querySelectorAll<HTMLFormElement>('[data-enquiry]').forEach((form) => {
     const status = form.querySelector<HTMLElement>('[data-status]')!;
     const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
-    const portalId = form.dataset.portalId;
-    const formGuid = form.dataset.formGuid;
-
-    /** HubSpot ties a submission to its analytics session via this cookie. */
-    const readHutk = () =>
-      document.cookie.split('; ').find((c) => c.startsWith('hubspotutk='))?.split('=')[1];
+    const { portalId, formGuid } = form.dataset;
 
     const setStatus = (message: string, state: 'ok' | 'error') => {
       status.textContent = message;
@@ -261,7 +300,6 @@ const enquiryTypes = [
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-
       if (!validate()) return;
 
       // Honeypot tripped — pretend it worked rather than telling the bot.
@@ -277,18 +315,16 @@ const enquiryTypes = [
       }
 
       const data = new FormData(form);
-      const fields = [
-        'firstname',
-        'lastname',
-        'email',
-        'phone',
-        'company',
-        'enquiry_type',
-        'preferred_date',
-        'message',
-      ]
-        .map((name) => ({ name, value: String(data.get(name) ?? '').trim() }))
-        .filter((field) => field.value !== '');
+      const raw: Record<string, string> = {};
+      for (const key of ['firstname', 'lastname', 'email', 'phone', 'company', 'enquiry_type', 'preferred_date', 'message']) {
+        raw[key] = String(data.get(key) ?? '').trim();
+      }
+      const name = String(data.get('name') ?? '').trim();
+      if (name) Object.assign(raw, splitName(name));
+
+      const fields = Object.entries(raw)
+        .filter(([, value]) => value !== '')
+        .map(([name, value]) => ({ name, value }));
 
       submit.disabled = true;
       const original = submit.textContent;
@@ -324,14 +360,11 @@ const enquiryTypes = [
         form.reset();
       } catch (error) {
         console.error(error);
-        setStatus(
-          'Something went wrong sending that. Please email us directly and we will pick it up.',
-          'error',
-        );
+        setStatus('Something went wrong sending that. Please email us directly and we will pick it up.', 'error');
       } finally {
         submit.disabled = false;
         submit.textContent = original;
       }
     });
-  }
+  });
 </script>

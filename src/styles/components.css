@@ -158,21 +158,6 @@
   display: block;
 }
 
-.pillar__index {
-  display: grid;
-  place-items: center;
-  width: 2.1rem;
-  height: 2.1rem;
-  border-radius: 50%;
-  background: var(--clay-pale);
-  font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  font-size: 0.8125rem;
-  color: var(--clay-darker);
-  margin-bottom: 0.9rem;
-}
-
 .pillar h3 { margin: 0 0 0.4em; }
 .pillar p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0; }
 

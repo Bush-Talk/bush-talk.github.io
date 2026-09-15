@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Gallery from '../components/Gallery.astro';
 import WorkshopCard from '../components/shared/WorkshopCard';
 import { toImg } from '../lib/images';
-import { home, site } from '../lib/site';
+import { weaving, site } from '../lib/site';
 
 const all = (await getCollection('workshops', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
@@ -38,14 +38,14 @@ const imgFor = (id: string) => rendered.find((r) => r.entry.id === id)?.img;
 
 <BaseLayout
   title="Weaving Workshops"
-  description={home.featureText}
+  description={weaving.intro}
 >
   <section class="section">
     <div class="shell shell--narrow">
-      <p class="eyebrow">Weaving Workshops</p>
-      <h1>{home.featureHeading}</h1>
-      <p class="lede">{home.featureText}</p>
-      <p class="pull">"It was just what our souls needed."</p>
+      <p class="eyebrow">{weaving.eyebrow}</p>
+      <h1>{weaving.heading}</h1>
+      <p class="lede">{weaving.intro}</p>
+      {weaving.pullQuote && <p class="pull">&ldquo;{weaving.pullQuote}&rdquo;</p>}
     </div>
   </section>
 
@@ -116,7 +116,7 @@ const imgFor = (id: string) => rendered.find((r) => r.entry.id === id)?.img;
     </section>
   )}
 
-  <ContactCta />
+  <ContactCta topic="Weaving workshop" heading="Enquire about a workshop" />
 </BaseLayout>
 
 <style>

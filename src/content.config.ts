@@ -23,6 +23,7 @@ const programs = defineCollection({
     duration: blankable(z.string()),
     audience: blankable(z.string()),
     includes: z.array(z.string()).default([]),
+    showOnHome: boolWithDefault(true),
     draft: boolWithDefault(false),
   }),
 });
@@ -92,6 +93,8 @@ const pages = defineCollection({
     description: blankable(z.string()),
     image: blankable(z.string()),
     imageAlt: z.string().default(''),
+    // Bek asked for the enquiry form on every page except About.
+    enquiryForm: boolWithDefault(true),
     draft: boolWithDefault(false),
   }),
 });

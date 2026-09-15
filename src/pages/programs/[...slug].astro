@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import ContactCta from '../../components/ContactCta.astro';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SmartImage from '../../components/SmartImage.astro';
@@ -109,6 +110,8 @@ const facts = [
       </section>
     )}
   </article>
+
+  <ContactCta />
 </BaseLayout>
 
 <style>

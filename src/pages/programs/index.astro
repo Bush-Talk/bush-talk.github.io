@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import ContactCta from '../../components/ContactCta.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProgramCard from '../../components/ProgramCard.astro';
 import Gallery from '../../components/Gallery.astro';
@@ -46,6 +47,8 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
     heading="How we spend our time"
     intro="Fire craft, cordage, carving, foraging and circle time — the skills that programs are built around."
   />
+
+  <ContactCta />
 </BaseLayout>
 
 <style>

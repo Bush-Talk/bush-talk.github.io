@@ -3,6 +3,7 @@ title: Rebekah Mitchell
 description: Mentor, counsellor and educator — facilitating Bush Talk in schools since 2021.
 image: /src/assets/uploads/rebekah-mitchell.webp
 imageAlt: "Rebekah weaving outdoors in a wide-brimmed red hat"
+enquiryForm: false
 draft: false
 ---
 

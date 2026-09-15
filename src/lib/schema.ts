@@ -33,5 +33,5 @@ export const text = z.string().catch('').default('');
  * Validated-but-forgiving string. A well-formed value passes, anything else
  * (including '') falls back to '' so the template can omit it.
  */
-export const softEmail = z.string().email().catch('').default('');
-export const softUrl = z.string().url().catch('').default('');
+export const softEmail = z.email().catch('').default('');
+export const softUrl = z.url().catch('').default('');
