@@ -40,7 +40,14 @@
 }
 
 .card__body { display: flex; flex-direction: column; flex: 1; padding: 1.5rem; }
-.card__title { margin: 0 0 0.5rem; font-size: 1.3rem; }
+.card__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--sage-deep);
+}
 .card__summary {
   margin: 0 0 1rem;
   color: var(--ink-soft);
@@ -51,9 +58,10 @@
 .card__meta {
   margin: 0 0 1rem;
   font-size: 0.8125rem;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--clay);
+  color: var(--clay-deep);
   max-width: none;
 }
 .card__cue { margin-top: auto; font-size: 0.875rem; font-weight: 500; color: var(--bark); }
@@ -84,9 +92,10 @@
 
 .workshop__when {
   font-size: 0.8125rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--clay);
+  color: var(--clay-deep);
   margin: 0 0 1rem;
 }
 
@@ -111,15 +120,19 @@
 
 .quote blockquote {
   margin: 0 0 1.25rem;
-  padding-left: 1.4rem;
-  border-left: 3px solid var(--ochre);
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.2rem);
-  line-height: 1.5;
+  padding: 1.4rem 1.6rem;
+  border-left: 0;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.96rem + 0.25vw, 1.1rem);
+  font-style: italic;
+  line-height: 1.65;
   color: var(--ink);
 }
 
-.quote figcaption { padding-left: calc(1.4rem + 3px); }
+.quote figcaption { padding-left: 1.6rem; }
 .quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
 .quote__role { display: block; font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.15rem; }
 
@@ -146,11 +159,18 @@
 }
 
 .pillar__index {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  color: var(--clay);
-  margin-bottom: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: var(--clay-pale);
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  color: var(--clay-darker);
+  margin-bottom: 0.9rem;
 }
 
 .pillar h3 { margin: 0 0 0.4em; }
@@ -175,11 +195,12 @@
 
 .site-footer__name {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 2.1rem;
   color: var(--paper);
   margin: 0 0 0.4rem;
 }
-.site-footer__tag { color: var(--ochre); font-size: 0.9375rem; margin: 0; max-width: 24ch; }
+.site-footer__tag { color: var(--ochre-light); font-size: 0.9375rem; margin: 0; max-width: 24ch; }
 
 .site-footer__group h2 {
   font-family: var(--font-body);
@@ -187,7 +208,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ochre);
+  color: var(--ochre-light);
   margin: 0 0 1rem;
 }
 
@@ -196,15 +217,15 @@
 .site-footer__group a {
   color: var(--paper);
   text-decoration: none;
-  border-bottom: 1px solid rgba(251, 247, 240, 0.25);
+  border-bottom: 1px solid rgba(248, 246, 240, 0.35);
 }
-.site-footer__group a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
-.site-footer__muted { color: var(--sage-pale); opacity: 0.75; font-size: 0.9375rem; }
+.site-footer__group a:hover { color: var(--ochre-light); border-bottom-color: var(--ochre); }
+.site-footer__muted { color: var(--sage-pale); opacity: 0.92; font-size: 0.9375rem; }
 
 .site-footer__base {
   margin-top: clamp(2.5rem, 5vw, 4rem);
   padding-top: 1.75rem;
-  border-top: 1px solid rgba(251, 247, 240, 0.15);
+  border-top: 1px solid rgba(248, 246, 240, 0.22);
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;

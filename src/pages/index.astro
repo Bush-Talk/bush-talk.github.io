@@ -35,7 +35,7 @@ const pillars = await Promise.all(
         <p class="hero__text">{home.heroText}</p>
         <div class="btn-row">
           {home.primaryCta.label && (
-            <a class="btn btn--primary" href={home.primaryCta.href || '/contact'}>
+            <a class="btn btn--flame" href={home.primaryCta.href || '/contact'}>
               {home.primaryCta.label}
             </a>
           )}
@@ -153,26 +153,32 @@ const pillars = await Promise.all(
   .hero__copy h1 { margin-bottom: 0.35em; }
 
   .hero__sub {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
-    line-height: 1.35;
-    color: var(--bark);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(1.2rem, 1.08rem + 0.6vw, 1.45rem);
+    line-height: 1.45;
+    color: var(--sage-deep);
     margin-bottom: 1.1em;
   }
 
   .hero__text { color: var(--ink-soft); }
 
+  /* Arched top, echoing the doorway shape on the current site. */
   .hero__media :global(img),
   .hero__media :global(.placeholder) {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-arch);
   }
 
   @media (max-width: 52rem) {
     .hero__media :global(img),
-    .hero__media :global(.placeholder) { aspect-ratio: 16 / 10; }
+    .hero__media :global(.placeholder) {
+      aspect-ratio: 5 / 4;
+      border-radius: 40% 40% 20px 20px / 22% 22% 20px 20px;
+    }
   }
 
   .hero__placeholder {
@@ -206,7 +212,7 @@ const pillars = await Promise.all(
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-arch);
   }
 
   @media (max-width: 52rem) {

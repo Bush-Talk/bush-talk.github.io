@@ -79,16 +79,17 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
   .wordmark__name {
     display: block;
     font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
   }
   .wordmark__tag {
     display: block;
     font-size: 0.6875rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--clay);
+    color: var(--clay-deep);
     margin-top: 0.15rem;
   }
 
@@ -104,6 +105,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
     color: var(--ink-soft);
     text-decoration: none;
     font-size: 0.9375rem;
+    font-weight: 600;
     padding-block: 0.4rem;
     border-bottom: 1px solid transparent;
   }

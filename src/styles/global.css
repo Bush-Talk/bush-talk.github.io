@@ -10,38 +10,60 @@
 :root {
   color-scheme: light;
 
-  /* Surface */
-  --paper: #fbf7f0;
-  --paper-warm: #f4ecdf;
-  --paper-deep: #ebe0cd;
+  /* Surface — sampled from the existing site. The bands have to differ enough
+     to read AS bands; the earlier paper/paper-warm pair was 8 luminance units
+     apart, so the page was effectively one flat cream. */
+  --paper: #f8f6f0;
+  --paper-warm: #f0ebe3;
+  --sand: #e7d9c5;
+  --paper-deep: #ddcbb2;
 
-  /* Ink */
-  --ink: #211e1a;
-  --ink-soft: #5c5449;
-  --ink-faint: #8a8071;
+  /* Ink — warm brown-grey rather than near-black. This one change does most
+     of the softening; near-black on cream reads sharp and editorial. */
+  --ink: #463f3a;
+  --ink-soft: #625a53;
+  --ink-faint: #6b6259;
 
-  /* Botanical */
-  --bark: #33402f;
-  --bark-deep: #222b1f;
-  --sage: #7f9070;
-  --sage-pale: #dde3d5;
+  /* Botanical — green is a LIGHT band here, not a dark block. */
+  --sage-band: #b6cb9c;      /* section background */
+  --sage-deep: #5a6e44;      /* text on cream, and the footer */
+  --sage: #6a8a54;
+  --sage-pale: #dfe6d3;
+  --bark: #4d5c40;           /* footer: mossy, not near-black */
+  --bark-deep: #3d4a33;
 
-  /* Warmth */
-  --clay: #b0602e;
-  --clay-deep: #8d4a21;
-  --ochre: #cd9a4e;
+  /* Warmth — the orange is the brand's, not an invented terracotta: #d97a45 is
+     sampled from the current site, #f07040 is the flame in the logo. It's meant
+     to be a SURFACE (buttons, badges, bands); clay-deep is the darker cousin
+     for small text, where the bright orange can't hold contrast. */
+  /* #d97a45 is a mid-tone: neither white nor dark text clears AA on it at body
+     size (the current site has this problem). So the bright orange is used for
+     decorative fills only — tints, rules, badges with no small text — and
+     clay-deep carries anything that has to be read. */
+  --flame: #f07040;        /* logo flame — decorative accents */
+  --clay: #d97a45;         /* decorative fills, never under small text */
+  --clay-deep: #a85a2c;    /* text on cream, and button fills */
+  --clay-darker: #8a4720;  /* small text on a warm tint */
+  --clay-pale: #f2e0cd;
+  --ochre: #d3a869;
+  --ochre-light: #eed7ab;  /* labels on the dark footer */
 
-  --line: #e2d7c5;
+  --line: #e0d7c6;
 
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Amatic SC is the brand's voice — the logo is hand-drawn too. It's a light,
+     condensed face, so it's used only at display sizes; Quicksand's rounded
+     terminals carry everything small enough to actually read. */
+  --font-display: 'Amatic SC', 'Bradley Hand', Georgia, serif;
+  --font-body: 'Quicksand Variable', 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --measure: 66ch;
   --shell: 1120px;
   --gutter: clamp(1.25rem, 5vw, 3rem);
 
-  --radius: 4px;
-  --radius-lg: 10px;
+  --radius: 10px;
+  --radius-lg: 20px;
+  /* Arched top, like the hero on the old site. */
+  --radius-arch: 48% 48% 20px 20px / 28% 28% 20px 20px;
 
   --step: clamp(3.5rem, 9vw, 6.5rem);
 }
@@ -66,7 +88,7 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
-  line-height: 1.65;
+  line-height: 1.7;
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -74,18 +96,29 @@ body {
 
 img, svg, video { max-width: 100%; height: auto; display: block; }
 
-h1, h2, h3, h4 {
+h1, h2 {
   font-family: var(--font-display);
-  font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.4em;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+/* h3 stays on the body face — Amatic gets hard to read below display size. */
+h3, h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.25;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
 
-h1 { font-size: clamp(2.5rem, 1.9rem + 3vw, 4.25rem); }
-h2 { font-size: clamp(1.9rem, 1.55rem + 1.6vw, 2.9rem); }
-h3 { font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem); }
+/* Amatic is roughly half the visual size of a normal face at the same px. */
+h1 { font-size: clamp(3.4rem, 2.4rem + 4.6vw, 6rem); }
+h2 { font-size: clamp(2.6rem, 2rem + 2.6vw, 4rem); }
+h3 { font-size: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem); }
 
 p { margin: 0 0 1.1em; max-width: var(--measure); text-wrap: pretty; }
 
@@ -113,27 +146,34 @@ hr { border: 0; border-top: 1px solid var(--line); margin: var(--step) 0; }
 
 .section { padding-block: var(--step); }
 .section--warm { background: var(--paper-warm); }
-.section--bark { background: var(--bark); color: var(--paper); }
-.section--bark h1, .section--bark h2, .section--bark h3 { color: var(--paper); }
-.section--bark a { color: var(--ochre); }
+.section--sand { background: var(--sand); }
+.section--sage { background: var(--sage-pale); }
+.section--bark { background: var(--sage-band); color: var(--ink); }
+.section--bark h1, .section--bark h2, .section--bark h3 { color: var(--ink); }
+.section--bark a { color: var(--clay-deep); }
 
 .eyebrow {
+  display: inline-block;
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--clay);
-  margin: 0 0 1rem;
+  color: var(--clay-darker);
+  background: var(--clay-pale);
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  margin: 0 0 1.25rem;
 }
-.section--bark .eyebrow { color: var(--ochre); }
+.section--bark .eyebrow { color: var(--clay-darker); background: var(--paper); }
+.section--sand .eyebrow { background: var(--paper); }
 
 .lede {
   font-size: clamp(1.1rem, 1.02rem + 0.4vw, 1.3rem);
   line-height: 1.55;
   color: var(--ink-soft);
 }
-.section--bark .lede { color: var(--sage-pale); }
+.section--bark .lede { color: var(--ink); }
 
 /* --- Buttons ------------------------------------------------------------ */
 
@@ -141,31 +181,35 @@ hr { border: 0; border-top: 1px solid var(--line); margin: var(--step) 0; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.85rem 1.7rem;
   border: 1px solid transparent;
   border-radius: 100px;
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
 }
 
-.btn--primary { background: var(--bark); color: var(--paper); }
-.btn--primary:hover { background: var(--bark-deep); color: var(--paper); }
+.btn--primary { background: var(--sage); color: var(--paper); }
+.btn--primary:hover { background: var(--sage-deep); color: var(--paper); }
+
+/* The orange call-to-action — used sparingly so it stays a signal. */
+.btn--flame { background: var(--clay-deep); color: #fff; }
+.btn--flame:hover { background: var(--clay-darker); color: #fff; }
 
 .btn--secondary {
   background: transparent;
-  color: var(--bark);
+  color: var(--sage-deep);
   border-color: var(--line);
 }
-.btn--secondary:hover { border-color: var(--bark); color: var(--bark); background: transparent; }
+.btn--secondary:hover { border-color: var(--sage-deep); color: var(--sage-deep); background: transparent; }
 
-.section--bark .btn--primary { background: var(--ochre); color: var(--bark-deep); }
-.section--bark .btn--primary:hover { background: var(--paper); color: var(--bark-deep); }
-.section--bark .btn--secondary { color: var(--paper); border-color: rgba(251, 247, 240, 0.35); }
-.section--bark .btn--secondary:hover { border-color: var(--paper); color: var(--paper); }
+.section--bark .btn--primary { background: var(--sage-deep); color: var(--paper); }
+.section--bark .btn--primary:hover { background: var(--bark-deep); color: var(--paper); }
+.section--bark .btn--secondary { color: var(--ink); border-color: rgba(70, 63, 58, 0.3); }
+.section--bark .btn--secondary:hover { border-color: var(--ink); color: var(--ink); }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
 
@@ -180,8 +224,8 @@ hr { border: 0; border-top: 1px solid var(--line); margin: var(--step) 0; }
   margin: 1.8em 0;
   padding-left: 1.4em;
   border-left: 3px solid var(--ochre);
-  font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-family: var(--font-body);
+  font-size: 1.15rem;
   font-style: italic;
   color: var(--ink-soft);
 }
