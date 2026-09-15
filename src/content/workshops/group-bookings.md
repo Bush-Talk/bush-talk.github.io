@@ -1,11 +1,16 @@
 ---
-title: Group Bookings
+title: Group Bookingsaaa
 summary: Host a private weaving workshop for you and your friends or community group.
-price: $350
+date: ''
+dateLabel: ''
+time: ''
+location: ''
 duration: 2.5-hour workshop
-order: 10
+price: $350
+bookingUrl: ''
 image: /src/assets/uploads/weaving-workshops-2.webp
-imageAlt: "Three people holding up the coiled baskets they have woven"
+imageAlt: Three people holding up the coiled baskets they have woven
+order: 10
 draft: false
 ---
 
