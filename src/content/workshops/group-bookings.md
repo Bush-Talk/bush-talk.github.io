@@ -1,5 +1,5 @@
 ---
-title: Group Bookingsaaaa
+title: Group Bookings
 summary: Host a private weaving workshop for you and your friends or community group.
 date: ''
 dateLabel: ''
