@@ -64,6 +64,23 @@ const testimonials = defineCollection({
   }),
 });
 
+/**
+ * Loose photos that aren't tied to one program or workshop. Grouped so a photo
+ * can be pointed at the page it belongs on without needing a new collection
+ * every time.
+ */
+const gallery = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/gallery' }),
+  schema: z.object({
+    image: z.string(),
+    imageAlt: z.string().default(''),
+    caption: z.string().optional(),
+    group: z.enum(['weaving', 'bush']).default('bush'),
+    order: z.number().default(50),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
@@ -75,4 +92,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { programs, workshops, testimonials, pages };
+export const collections = { programs, workshops, testimonials, gallery, pages };

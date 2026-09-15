@@ -3,8 +3,8 @@
   "heroHeading": "Nature-Based Wellbeing programs",
   "heroSubheading": "Bush Talk programs facilitate deep and mindful connection to nature, to others and to self.",
   "heroText": "Bush Talk offers immersive nature-based experiences that nurture self-discovery, resilience, and deep connection with others. We provide a supportive space for personal growth and community, empowering individuals to rediscover their sense of belonging and connection with the natural world, the land we live on.",
-  "heroImage": "",
-  "heroImageAlt": "",
+  "heroImage": "/src/assets/uploads/hero-oak-tree.webp",
+  "heroImageAlt": "A vast old oak with a bench beneath its spreading branches",
   "primaryCta": {
     "label": "Book Now",
     "href": "/contact"
@@ -18,15 +18,21 @@
   "pillars": [
     {
       "title": "Connection to self",
-      "body": "Through guided experiences and gentle teaching, participants learn to slow down, notice their thoughts and feelings, and understand how these influence their behaviour. Explicitly teaching self-awareness supports developing strategies for stronger emotional regulation and personal growth."
+      "body": "Through guided experiences and gentle teaching, participants learn to slow down, notice their thoughts and feelings, and understand how these influence their behaviour. Explicitly teaching self-awareness supports developing strategies for stronger emotional regulation and personal growth.",
+      "image": "/src/assets/uploads/how-we-spend-our-time-3.webp",
+      "imageAlt": "A chalkboard reading \"Resilience\" beside baskets of natural materials"
     },
     {
       "title": "Connection to others",
-      "body": "Through shared experiences and guided practices, participants are guided to slow down, listen deeply, and connect with others in authentic and supportive ways. As barriers soften, honest communication, empathy and deep connection unfold, leading to more meaningful relationships and stronger communities."
+      "body": "Through shared experiences and guided practices, participants are guided to slow down, listen deeply, and connect with others in authentic and supportive ways. As barriers soften, honest communication, empathy and deep connection unfold, leading to more meaningful relationships and stronger communities.",
+      "image": "/src/assets/uploads/wix-enhancing-whole-person-development-2.webp",
+      "imageAlt": "A ring of children’s hands stacked together in the middle of a circle"
     },
     {
       "title": "Connection to Nature",
-      "body": "Spending time in nature helps participants slow down, notice the world around them, deepening their respect for the natural world. Learning basic bush skills builds confidence and helps people feel comfortable and capable outdoors. These practical, hands-on experiences create a deep connection to the land and sense of belonging to place."
+      "body": "Spending time in nature helps participants slow down, notice the world around them, deepening their respect for the natural world. Learning basic bush skills builds confidence and helps people feel comfortable and capable outdoors. These practical, hands-on experiences create a deep connection to the land and sense of belonging to place.",
+      "image": "/src/assets/uploads/connection-to-self-3.webp",
+      "imageAlt": "Seedlings and cuttings laid out along a weathered bench"
     }
   ],
   "programsHeading": "Flexible Learning Programs",
@@ -42,5 +48,7 @@
   "closingCta": {
     "label": "Send a Message",
     "href": "/contact"
-  }
+  },
+  "featureImage": "/src/assets/uploads/wix-enhancing-whole-person-development.webp",
+  "featureImageAlt": "Green fibres being woven on an upright loom"
 }

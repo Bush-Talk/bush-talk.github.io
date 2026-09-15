@@ -30,5 +30,17 @@
       means a release can break the editor while nobody is looking.
     -->
     <script is:inline src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
+
+    <!--
+      Live preview. preview-bundle.js imports the SAME components the site
+      renders, compiled against Sveltia's own React globals so no second copy of
+      React loads. Built by `npm run build:preview`. None of this reaches the
+      public site — it is only ever requested by /admin.
+    -->
+    <script is:inline>
+      window.CMS?.registerPreviewStyle('/admin/preview.css');
+      window.CMS?.registerPreviewStyle('/admin/preview-bundle.css');
+    </script>
+    <script is:inline src="/admin/preview-bundle.js"></script>
   </body>
 </html>

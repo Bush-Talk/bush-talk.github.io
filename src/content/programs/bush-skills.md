@@ -14,6 +14,8 @@ includes:
   - Outdoor cooking
   - Natural craft
   - Observation
+image: /src/assets/uploads/how-we-spend-our-time.webp
+imageAlt: "Many hands together around a small fire being lit"
 draft: false
 ---
 

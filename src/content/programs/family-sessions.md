@@ -7,6 +7,8 @@ audience: Families
 includes:
   - Guided nature-based family time that supports healthier ways of being
   - Tailored support to enhance families personal growth and wellbeing
+image: /src/assets/uploads/wix-enhancing-whole-person-development-3.webp
+imageAlt: "Two children crouched together looking closely at plants"
 draft: false
 ---
 

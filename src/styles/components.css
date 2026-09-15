@@ -1,0 +1,220 @@
+/* ---------------------------------------------------------------------------
+   Styles for the components shared between the site and the CMS preview pane.
+
+   These live here rather than in an .astro <style> block because the same React
+   components render in both places, and Astro's scoped styles only exist on the
+   site side. One stylesheet, two consumers — the preview genuinely matches.
+
+   Depends on the tokens in global.css, which both consumers also load.
+--------------------------------------------------------------------------- */
+
+/* --- program card --------------------------------------------------------- */
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.card:hover { border-color: var(--sage); transform: translateY(-2px); }
+
+.card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card__media { aspect-ratio: 16 / 10; background: var(--paper-deep); overflow: hidden; }
+.card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.card__placeholder {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--sage) 35%, transparent), transparent 55%),
+    radial-gradient(circle at 75% 70%, color-mix(in srgb, var(--ochre) 30%, transparent), transparent 50%),
+    var(--paper-deep);
+}
+
+.card__body { display: flex; flex-direction: column; flex: 1; padding: 1.5rem; }
+.card__title { margin: 0 0 0.5rem; font-size: 1.3rem; }
+.card__summary {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: none;
+}
+.card__meta {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--clay);
+  max-width: none;
+}
+.card__cue { margin-top: auto; font-size: 0.875rem; font-weight: 500; color: var(--bark); }
+.card:hover .card__cue { color: var(--clay-deep); }
+
+/* --- workshop card -------------------------------------------------------- */
+
+.workshop {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.workshop__image {
+  width: calc(100% + 3.5rem);
+  max-width: none;
+  margin: -1.75rem -1.75rem 1.25rem;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: block;
+}
+
+.workshop h3 { margin: 0 0 0.4rem; font-size: 1.3rem; }
+
+.workshop__when {
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin: 0 0 1rem;
+}
+
+.workshop__body { flex: 1; font-size: 0.9375rem; color: var(--ink-soft); }
+.workshop__body > :first-child { margin-top: 0; }
+.workshop__body > :last-child { margin-bottom: 0; }
+.workshop__body ul { padding-left: 1.2rem; }
+
+.workshop__meta {
+  margin: 1.25rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.workshop__cta { align-self: flex-start; }
+
+/* --- quote ---------------------------------------------------------------- */
+
+.quote { margin: 0; }
+
+.quote blockquote {
+  margin: 0 0 1.25rem;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--ochre);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.quote figcaption { padding-left: calc(1.4rem + 3px); }
+.quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
+.quote__role { display: block; font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.15rem; }
+
+/* --- pillars -------------------------------------------------------------- */
+
+.pillars {
+  list-style: none;
+  margin: 3rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.5rem;
+}
+
+.pillar { padding-top: 1.25rem; border-top: 2px solid var(--sage-pale); }
+
+.pillar__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.25rem;
+  display: block;
+}
+
+.pillar__index {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  color: var(--clay);
+  margin-bottom: 0.75rem;
+}
+
+.pillar h3 { margin: 0 0 0.4em; }
+.pillar p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0; }
+
+/* --- footer --------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--bark);
+  color: var(--sage-pale);
+  padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+}
+
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem;
+}
+
+.site-footer__name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--paper);
+  margin: 0 0 0.4rem;
+}
+.site-footer__tag { color: var(--ochre); font-size: 0.9375rem; margin: 0; max-width: 24ch; }
+
+.site-footer__group h2 {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+}
+
+.site-footer__group ul { list-style: none; margin: 0; padding: 0; }
+.site-footer__group li + li { margin-top: 0.5rem; }
+.site-footer__group a {
+  color: var(--paper);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(251, 247, 240, 0.25);
+}
+.site-footer__group a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+.site-footer__muted { color: var(--sage-pale); opacity: 0.75; font-size: 0.9375rem; }
+
+.site-footer__base {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(251, 247, 240, 0.15);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.site-footer__acknowledgement {
+  max-width: 62ch;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.site-footer__copy { font-size: 0.875rem; opacity: 0.6; margin: 0; }

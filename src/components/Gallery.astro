@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import SmartImage from './SmartImage.astro';
+
+interface Props {
+  group: 'weaving' | 'bush';
+  heading?: string;
+  intro?: string;
+  variant?: 'grid' | 'strip';
+}
+
+const { group, heading, intro, variant = 'grid' } = Astro.props;
+
+const items = (await getCollection('gallery', ({ data }) => !data.draft && data.group === group)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+{items.length > 0 && (
+  <section class="section">
+    <div class="shell">
+      {heading && <h2>{heading}</h2>}
+      {intro && <p class="lede">{intro}</p>}
+
+      <ul class={`gallery gallery--${variant}`}>
+        {items.map(({ data }) => (
+          <li class="gallery__item">
+            <figure>
+              <SmartImage
+                src={data.image}
+                alt={data.imageAlt}
+                widths={[280, 420, 640]}
+                sizes="(max-width: 40rem) 45vw, (max-width: 64rem) 30vw, 260px"
+              />
+              {data.caption && <figcaption>{data.caption}</figcaption>}
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .gallery {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .gallery--grid { grid-template-columns: repeat(auto-fill, minmax(min(240px, 45%), 1fr)); }
+  .gallery--strip { grid-template-columns: repeat(auto-fill, minmax(min(190px, 45%), 1fr)); }
+
+  .gallery__item { margin: 0; }
+  .gallery__item figure { margin: 0; }
+
+  .gallery__item :global(img),
+  .gallery__item :global(.placeholder) {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  .gallery--strip :global(img),
+  .gallery--strip :global(.placeholder) { aspect-ratio: 4 / 3; }
+
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.8125rem;
+    color: var(--ink-faint);
+    line-height: 1.45;
+  }
+</style>

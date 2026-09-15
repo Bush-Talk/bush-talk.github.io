@@ -1,6 +1,8 @@
 ---
 title: Rebekah Mitchell
 description: Creating strong relationships and learning about how to cultivate healthier communication has been a strong theme throughout my professional and personal life.
+image: /src/assets/uploads/rebekah-mitchell.webp
+imageAlt: "Rebekah weaving outdoors in a wide-brimmed red hat"
 draft: false
 ---
 

@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SmartImage from '../components/SmartImage.astro';
 
 /**
  * Catch-all for free-form pages managed in the CMS (About, Policies, and so on).
@@ -24,6 +25,16 @@ const { Content } = await render(page);
     <div class="shell shell--narrow">
       <h1>{page.data.title}</h1>
       {page.data.description && <p class="lede">{page.data.description}</p>}
+      {page.data.image && (
+        <SmartImage
+          class="page-image"
+          src={page.data.image}
+          alt={page.data.imageAlt ?? ''}
+          widths={[480, 760, 1040]}
+          sizes="(max-width: 48rem) 100vw, 760px"
+          loading="eager"
+        />
+      )}
       <div class="prose page-body">
         <Content />
       </div>
@@ -33,4 +44,12 @@ const { Content } = await render(page);
 
 <style>
   .page-body { margin-top: 2.5rem; }
+
+  :global(.page-image) {
+    width: 100%;
+    margin-top: 2.5rem;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
 </style>

@@ -43,13 +43,22 @@ const homeSchema = z.object({
 
   pillarsHeading: z.string(),
   pillarsIntro: optionalText,
-  pillars: z.array(z.object({ title: z.string(), body: z.string() })),
+  pillars: z.array(
+    z.object({
+      title: z.string(),
+      body: z.string(),
+      image: optionalText,
+      imageAlt: optionalText,
+    }),
+  ),
 
   programsHeading: z.string(),
   programsIntro: optionalText,
 
   featureHeading: z.string(),
   featureText: z.string(),
+  featureImage: optionalText,
+  featureImageAlt: optionalText,
   featureCta: linkSchema,
 
   closingHeading: z.string(),

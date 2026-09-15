@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Quote from '../components/shared/Quote';
 
 const groups = [
   { key: 'principals', heading: 'From the principals' },
@@ -32,13 +33,7 @@ const sections = groups
           <h2>{group.heading}</h2>
           <div class="quotes">
             {group.items.map(({ data }) => (
-              <figure class="quote">
-                <blockquote>{data.quote}</blockquote>
-                <figcaption>
-                  <span class="quote__author">{data.author}</span>
-                  {data.role && <span class="quote__role">{data.role}</span>}
-                </figcaption>
-              </figure>
+              <Quote quote={data.quote} author={data.author} role={data.role} />
             ))}
           </div>
         </section>
@@ -67,19 +62,4 @@ const sections = groups
     gap: 2.5rem;
     margin-top: 2rem;
   }
-
-  .quote { margin: 0; }
-
-  .quote blockquote {
-    margin: 0 0 1rem;
-    padding-left: 1.4rem;
-    border-left: 3px solid var(--ochre);
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    line-height: 1.55;
-  }
-
-  .quote figcaption { padding-left: calc(1.4rem + 3px); }
-  .quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
-  .quote__role { display: block; font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.15rem; }
 </style>

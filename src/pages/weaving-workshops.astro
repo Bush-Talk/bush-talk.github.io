@@ -1,6 +1,9 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Gallery from '../components/Gallery.astro';
+import WorkshopCard from '../components/shared/WorkshopCard';
+import { toImg } from '../lib/images';
 import { home, site } from '../lib/site';
 
 const all = (await getCollection('workshops', ({ data }) => !data.draft)).sort(
@@ -17,9 +20,19 @@ const dated = upcoming.filter((w) => w.data.date);
 const ongoing = upcoming.filter((w) => !w.data.date);
 
 const rendered = await Promise.all(
-  upcoming.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+  upcoming.map(async (entry) => ({
+    entry,
+    Content: (await render(entry)).Content,
+    img: await toImg(
+      entry.data.image,
+      entry.data.imageAlt ?? '',
+      [320, 480, 640],
+      '(max-width: 52rem) 100vw, 340px',
+    ),
+  })),
 );
 const contentFor = (id: string) => rendered.find((r) => r.entry.id === id)?.Content;
+const imgFor = (id: string) => rendered.find((r) => r.entry.id === id)?.img;
 ---
 
 <BaseLayout
@@ -42,25 +55,21 @@ const contentFor = (id: string) => rendered.find((r) => r.entry.id === id)?.Cont
         <div class="grid">
           {dated.map(({ id, data }) => {
             const Content = contentFor(id);
-            const when = [data.dateLabel, data.time].filter(Boolean).join(' ');
+            const when = [[data.dateLabel, data.time].filter(Boolean).join(' '), data.location]
+              .filter(Boolean)
+              .join('. ');
             return (
-              <article class="workshop">
-                <h3>{data.title}</h3>
-                {(when || data.location) && (
-                  <p class="workshop__when">
-                    {[when, data.location].filter(Boolean).join('. ')}
-                  </p>
-                )}
-                <div class="workshop__body prose">{Content && <Content />}</div>
-                {(data.price || data.duration) && (
-                  <p class="workshop__price">
-                    {[data.duration, data.price].filter(Boolean).join(' · ')}
-                  </p>
-                )}
-                <a class="btn btn--secondary" href={data.bookingUrl ?? '/contact'}>
-                  {data.bookingUrl ? 'Book now' : 'Enquire'}
-                </a>
-              </article>
+              <WorkshopCard
+                title={data.title}
+                when={when}
+                image={imgFor(id)}
+                price={data.price}
+                duration={data.duration}
+                ctaLabel={data.bookingUrl ? 'Book now' : 'Enquire'}
+                ctaHref={data.bookingUrl ?? '/contact'}
+              >
+                {Content && <Content />}
+              </WorkshopCard>
             );
           })}
         </div>
@@ -76,22 +85,23 @@ const contentFor = (id: string) => rendered.find((r) => r.entry.id === id)?.Cont
           {ongoing.map(({ id, data }) => {
             const Content = contentFor(id);
             return (
-              <article class="workshop">
-                <h3>{data.title}</h3>
-                <div class="workshop__body prose">{Content && <Content />}</div>
-                {(data.price || data.duration) && (
-                  <p class="workshop__price">
-                    {[data.duration, data.price].filter(Boolean).join(' · ')}
-                  </p>
-                )}
-                <a class="btn btn--secondary" href="/contact">Enquire</a>
-              </article>
+              <WorkshopCard
+                title={data.title}
+                image={imgFor(id)}
+                price={data.price}
+                duration={data.duration}
+                ctaHref="/contact"
+              >
+                {Content && <Content />}
+              </WorkshopCard>
             );
           })}
         </div>
       </div>
     </section>
   )}
+
+  <Gallery group="weaving" heading="From the workshops" />
 
   {upcoming.length === 0 && (
     <section class="section">
@@ -123,36 +133,5 @@ const contentFor = (id: string) => rendered.find((r) => r.entry.id === id)?.Cont
     margin-top: 2.5rem;
   }
 
-  .workshop {
-    display: flex;
-    flex-direction: column;
-    padding: 1.75rem;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-  }
 
-  .workshop h3 { margin-bottom: 0.4rem; }
-
-  .workshop__when {
-    font-size: 0.8125rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--clay);
-    margin-bottom: 1rem;
-  }
-
-  .workshop__body { flex: 1; font-size: 0.9375rem; color: var(--ink-soft); }
-  .workshop__body :global(p:last-child) { margin-bottom: 0; }
-  .workshop__body :global(ul) { font-size: 0.9375rem; }
-
-  .workshop__price {
-    margin: 1.25rem 0 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line);
-    font-weight: 500;
-    font-size: 0.9375rem;
-  }
-
-  .workshop .btn { align-self: flex-start; }
 </style>

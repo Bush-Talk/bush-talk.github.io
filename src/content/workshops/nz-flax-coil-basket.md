@@ -7,6 +7,8 @@ location: Warrandyte
 duration: 2.5 hours
 order: 30
 summary: Learn how to ethically harvest materials, prepare fibres and weave your own small basket with New Zealand Flax.
+image: /src/assets/uploads/new-zealand-flax-coil-basket-workshop-2.webp
+imageAlt: "A finished flax basket held in two hands"
 draft: false
 ---
 

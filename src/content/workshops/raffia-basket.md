@@ -6,6 +6,8 @@ time: 1–3:30pm
 location: Yarrunga Community Centre, Croydon North
 order: 50
 summary: Learn to weave a wrapped coil basket using raffia naturally dyed with avocado and onion peels and more!
+image: /src/assets/uploads/weaving-workshops.webp
+imageAlt: "A coiled raffia basket in blues and greens from natural dyes"
 draft: false
 ---
 

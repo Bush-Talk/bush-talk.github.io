@@ -9,6 +9,8 @@ includes:
   - Increase capabilities for setting and achieving personal goals
   - Fostering self-discovery through open dialogue and one-on-one discussion
   - Develop a deeper connection with yourself through personal exploration
+image: /src/assets/uploads/connection-to-self.webp
+imageAlt: "A child writing quietly on paper outdoors"
 draft: false
 ---
 

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://bushtalkinfo.com/sitemap-index.xml
+Sitemap: https://bush-talk.github.io/sitemap-index.xml

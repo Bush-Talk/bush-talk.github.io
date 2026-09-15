@@ -33,11 +33,18 @@ Two ways in.
 **Locally** — content is Markdown and JSON under `src/content/` and `src/data/`.
 Edit the files directly.
 
-**In the browser** — run `npm run dev` and open `http://localhost:4321/admin`.
-Sveltia can read and write your local checkout through the browser's File System
-Access API (Chrome/Edge), so you get the real editor without deploying anything.
+**In the browser** — run `npm run dev` and open `http://localhost:4321/admin`, then
+click **Work with Local Repository**. Sveltia reads and writes your checkout through
+the browser's File System Access API (Chrome/Edge only), so you get the real editor
+without deploying anything or signing in.
 
 Once deployed, the same editor lives at `yoursite.com/admin` and commits to GitHub.
+
+The editor is two files: `src/pages/admin/index.astro` (the page) and
+`public/admin/config.yml` (the form fields). The page is a route rather than a file
+in `public/` because Astro's dev server serves `public/` by exact path only —
+`public/admin/index.html` 404s at `/admin` locally and only works once a host does
+directory-index resolution for you.
 
 ### Content model
 
@@ -49,6 +56,19 @@ Once deployed, the same editor lives at `yoursite.com/admin` and commits to GitH
 | `src/content/pages/` | Free-form pages | `/<filename>` |
 | `src/data/site.json` | Contact details, footer | everywhere |
 | `src/data/home.json` | Home page copy | `/` |
+| `src/assets/uploads/` | Images | wherever they're referenced |
+
+### Images
+
+Uploads live in `src/assets/uploads/`, **not** `public/`. That matters: Astro only
+optimises images under `src/`. At build time it resizes each one, converts to webp,
+writes the variants into `dist/_astro/`, and rewrites the `<img>` to a `srcset` —
+so a phone downloads the 480px version while a desktop gets 1400px. Files in
+`public/` are copied verbatim, so a 3000px phone photo would ship at 3000px.
+
+`SmartImage.astro` wraps this and falls back to a plain `<img>` for external URLs,
+and to a gradient block when a path doesn't resolve, so a bad path degrades rather
+than breaking the build.
 
 Dated workshops drop off the site automatically once the date passes, so old ones
 can be left in place rather than deleted. Anything with `draft: true` is excluded
@@ -69,9 +89,7 @@ from the build.
    form GUID. Until that's done the contact form shows a notice instead of sending.
    The `enquiry_type` field expects a custom contact property in HubSpot — create it
    under Settings → Properties, or remove the field.
-4. **Add real images.** Everything currently renders a gradient placeholder. Images
-   uploaded through the CMS land in `public/uploads/`.
-5. **Deploy.** Not set up yet.
+4. **Deploy.** Not set up yet.
 
 ### Editor login options
 
@@ -93,5 +111,7 @@ changed and are worth a look:
 - **Mullam / Mullum Primary** — same. Using **Mullum**.
 - **Workshop dates** — the dated workshops had all passed, so they're set to 2027
   placeholders to keep the section visible. Replace with real dates.
+- **Images** were pulled from both live sites (36 files) and assigned by eye. The
+  pairings are a starting point — swap any of them in the CMS.
 - **Contact details** — taken from bushtalkinfo.com. The Wix site's
   `hello@bushtalk.com.au` / `+61 400 000 000` are placeholders and weren't used.

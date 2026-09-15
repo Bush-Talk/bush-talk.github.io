@@ -1,0 +1,236 @@
+/* ---------------------------------------------------------------------------
+   Styles for the Sveltia preview pane only.
+
+   Deliberately a small subset of src/styles/global.css, not a copy: the preview
+   renders a bare markdown body, so it needs typography and nothing else. It is
+   an approximation of the real page, not a replica — the "View on Live Site"
+   button on each entry is the source of truth for how something actually looks.
+
+   Fonts are loaded from the CDN here because this file is served as a plain
+   static asset, outside Astro's bundling.
+--------------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+body {
+  margin: 0;
+  padding: 2rem clamp(1.25rem, 5vw, 3rem);
+  background: #fbf7f0;
+  color: #211e1a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 1.8em 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 { font-size: 2.4rem; margin-top: 0; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.3rem; }
+
+p { margin: 0 0 1.1em; max-width: 66ch; text-wrap: pretty; }
+
+a { color: #8d4a21; text-underline-offset: 0.18em; }
+
+ul, ol { padding-left: 1.3em; max-width: 66ch; }
+li + li { margin-top: 0.4em; }
+
+blockquote {
+  margin: 1.8em 0;
+  padding-left: 1.4em;
+  border-left: 3px solid #cd9a4e;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #5c5449;
+}
+
+img { max-width: 100%; height: auto; border-radius: 10px; margin-block: 2em; }
+
+hr { border: 0; border-top: 1px solid #e2d7c5; margin: 2.5rem 0; }
+
+code {
+  font-size: 0.875em;
+  background: #ebe0cd;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Classes used by preview-templates.js
+--------------------------------------------------------------------------- */
+
+.bt-preview { max-width: 46rem; }
+
+.bt-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b0602e;
+  margin: 0 0 1rem;
+}
+
+.bt-lede {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: #5c5449;
+}
+
+.bt-when {
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #b0602e;
+}
+
+.bt-aside {
+  display: grid;
+  gap: 1.75rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f4ecdf;
+  border-radius: 10px;
+}
+.bt-aside:empty { display: none; }
+
+.bt-facts { margin: 0; display: grid; gap: 1rem; }
+.bt-facts__row { display: grid; gap: 0.2rem; }
+.bt-facts dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b0602e;
+}
+.bt-facts dd { margin: 0; font-size: 0.9375rem; }
+
+.bt-includes h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b0602e;
+  margin: 0 0 0.75rem;
+}
+.bt-includes ul { margin: 0; padding-left: 1.1rem; font-size: 0.9375rem; }
+.bt-includes li + li { margin-top: 0.4em; }
+
+.bt-body > :first-child { margin-top: 0; }
+
+.bt-quote { margin: 1.5rem 0; }
+.bt-quote blockquote {
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+  border-left: 3px solid #cd9a4e;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.25rem;
+  font-style: normal;
+  line-height: 1.5;
+  color: #211e1a;
+}
+.bt-quote figcaption { padding-left: calc(1.4rem + 3px); }
+.bt-quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
+.bt-quote__role { display: block; font-size: 0.875rem; color: #8a8071; margin-top: 0.15rem; }
+
+.bt-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  background: #dde3d5;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #222b1f;
+}
+
+.bt-empty { color: #8a8071; font-style: italic; }
+
+/* --- in-context previews -------------------------------------------------- */
+
+.bt-context { margin: 1.5rem 0; }
+
+.bt-context__label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8071;
+  margin: 0 0 0.9rem;
+}
+
+.bt-context__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.bt-context__ghost {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1.1rem;
+  border: 1px dashed #e2d7c5;
+  border-radius: 10px;
+  opacity: 0.55;
+}
+
+.bt-ghost-line { display: block; height: 0.6rem; border-radius: 3px; background: #ebe0cd; }
+.bt-ghost-line--head { height: 0.9rem; width: 65%; background: #ddd0b8; }
+.bt-ghost-line--short { width: 45%; }
+
+/* --- home page ------------------------------------------------------------ */
+
+.bt-home__hero { padding-bottom: 2rem; }
+.bt-home__sub {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: #33402f;
+}
+
+.bt-home__section {
+  margin: 0 -1.25rem;
+  padding: 2rem 1.25rem;
+  border-top: 1px solid #e2d7c5;
+}
+.bt-home__section--warm { background: #f4ecdf; border-top-color: transparent; }
+.bt-home__section--bark {
+  background: #33402f;
+  color: #dde3d5;
+  border-radius: 10px;
+  border-top-color: transparent;
+  margin-top: 1.5rem;
+}
+.bt-home__section--bark h2 { color: #fbf7f0; }
+.bt-home__section--bark .bt-lede { color: #dde3d5; }
+
+
+.bt-btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.bt-btn {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.bt-btn--primary { background: #33402f; color: #fbf7f0; }
+.bt-btn--secondary { border: 1px solid #e2d7c5; color: #33402f; }
+.bt-home__section--bark .bt-btn--primary { background: #cd9a4e; color: #222b1f; }
+
+
+/* Page image in the free-form pages preview. */
+.bt-page-image {
+  width: 100%;
+  margin-top: 2rem;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 10px;
+}

@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SmartImage from '../../components/SmartImage.astro';
 import { site } from '../../lib/site';
 
 export const getStaticPaths = (async () => {
@@ -35,7 +36,15 @@ const facts = [
 
     {image && (
       <div class="shell">
-        <img class="head__image" src={image} alt={imageAlt ?? ''} fetchpriority="high" />
+        <SmartImage
+          class="head__image"
+          src={image}
+          alt={imageAlt ?? ''}
+          widths={[640, 1024, 1400, 1800]}
+          sizes="(max-width: 70rem) 100vw, 1120px"
+          loading="eager"
+          fetchpriority="high"
+        />
       </div>
     )}
 
@@ -79,7 +88,7 @@ const facts = [
   .head { padding-bottom: 2rem; }
   .head .eyebrow a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
 
-  .head__image {
+  :global(.head__image) {
     width: 100%;
     aspect-ratio: 21 / 9;
     object-fit: cover;

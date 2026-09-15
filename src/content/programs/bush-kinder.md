@@ -12,6 +12,8 @@ includes:
   - Introduction to mindfulness practice
   - Build awareness of our first nations people and respecting country
   - Lots of play!
+image: /src/assets/uploads/how-we-spend-our-time-2.webp
+imageAlt: "A young child in a green sun hat exploring among bush scrub"
 draft: false
 ---
 

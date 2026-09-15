@@ -8,7 +8,7 @@
 
 backend:
   name: github
-  repo: OWNER/bushtalk # <- change to your GitHub owner/repo
+  repo: Bush-Talk/bush-talk.github.io
   branch: main
   # Uncomment once the auth worker is deployed. Without it, sign-in falls back
   # to pasting a personal access token, which is fine for your own testing.
@@ -19,15 +19,17 @@ backend:
 # Sveltia reads and writes the files directly via the File System Access API
 # (Chrome/Edge only).
 
-site_url: https://bushtalkinfo.com
-display_url: https://bushtalkinfo.com
+site_url: https://bush-talk.github.io
+display_url: https://bush-talk.github.io
 
-media_folder: public/uploads
-public_folder: /uploads
+# Uploads land in src/ so Astro's image pipeline processes them — resizing,
+# webp/avif conversion and responsive srcset per usage. Anything in public/ is
+# copied verbatim, so a 3000px phone photo would ship at 3000px.
+media_folder: src/assets/uploads
+public_folder: /src/assets/uploads
 
-# No preview templates defined, so an empty preview pane would just confuse.
-editor:
-  preview: false
+# The preview pane renders the markdown body using public/admin/preview.css.
+# It's switched off per-collection below for entries that have no body.
 
 collections:
   # ---------------------------------------------------------------------------
@@ -39,6 +41,7 @@ collections:
     slug: '{{slug}}'
     format: frontmatter
     summary: '{{title}}'
+    preview_path: 'programs/{{slug}}'
     sortable_fields: [order, title]
     fields:
       - { name: title, label: Title, widget: string }
@@ -86,6 +89,7 @@ collections:
     slug: '{{slug}}'
     format: frontmatter
     summary: '{{title}}'
+    preview_path: 'weaving-workshops'
     sortable_fields: [order, date, title]
     fields:
       - { name: title, label: Title, widget: string }
@@ -129,7 +133,10 @@ collections:
     slug: '{{slug}}'
     format: frontmatter
     summary: '{{author}} — {{quote}}'
+    preview_path: 'reviews'
     sortable_fields: [order, author]
+    editor:
+      preview: false # no body to render — the fields are the whole entry
     fields:
       - { name: quote, label: Quote, widget: text }
       - { name: author, label: Who said it, widget: string }
@@ -155,6 +162,39 @@ collections:
       - { name: draft, label: Draft, widget: boolean, default: false }
 
   # ---------------------------------------------------------------------------
+  - name: gallery
+    label: Photo gallery
+    label_singular: Photo
+    folder: src/content/gallery
+    create: true
+    slug: '{{slug}}'
+    format: frontmatter
+    summary: '{{imageAlt}}'
+    sortable_fields: [order, group]
+    editor:
+      preview: false
+    fields:
+      - { name: image, label: Photo, widget: image }
+      - name: imageAlt
+        label: Photo description
+        widget: string
+        hint: Describes the photo for people using a screen reader. Not shown on the page.
+      - name: caption
+        label: Caption
+        widget: string
+        required: false
+        hint: Optional. Shown under the photo.
+      - name: group
+        label: Where it appears
+        widget: select
+        default: bush
+        options:
+          - { label: Weaving workshops page, value: weaving }
+          - { label: Programs page, value: bush }
+      - { name: order, label: Sort order, widget: number, value_type: int, default: 50 }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+
+  # ---------------------------------------------------------------------------
   - name: pages
     label: Pages
     label_singular: Page
@@ -163,6 +203,7 @@ collections:
     slug: '{{slug}}'
     format: frontmatter
     summary: '{{title}}'
+    preview_path: '{{slug}}'
     fields:
       - { name: title, label: Title, widget: string }
       - name: description
@@ -245,12 +286,20 @@ collections:
             fields:
               - { name: title, label: Title, widget: string }
               - { name: body, label: Text, widget: text }
+              - { name: image, label: Image, widget: image, required: false }
+              - { name: imageAlt, label: Image description, widget: string, required: false }
 
           - { name: programsHeading, label: 'Section 3: heading', widget: string }
           - { name: programsIntro, label: 'Section 3: intro', widget: text, required: false }
 
           - { name: featureHeading, label: 'Section 4: heading', widget: string }
           - { name: featureText, label: 'Section 4: text', widget: text }
+          - { name: featureImage, label: 'Section 4: image', widget: image, required: false }
+          - name: featureImageAlt
+            label: 'Section 4: image description'
+            widget: string
+            required: false
+            hint: Describes the image for people using a screen reader.
           - name: featureCta
             label: 'Section 4: button'
             widget: object

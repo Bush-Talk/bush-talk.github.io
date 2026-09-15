@@ -2,11 +2,26 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProgramCard from '../components/ProgramCard.astro';
+import SmartImage from '../components/SmartImage.astro';
+import Pillars from '../components/shared/Pillars';
+import { toImg } from '../lib/images';
 import Testimonials from '../components/Testimonials.astro';
 import { home } from '../lib/site';
 
 const programs = (await getCollection('programs', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
+);
+
+const pillars = await Promise.all(
+  home.pillars.map(async (pillar) => ({
+    ...pillar,
+    image: await toImg(
+      pillar.image,
+      pillar.imageAlt,
+      [320, 480, 720],
+      '(max-width: 52rem) 100vw, 340px',
+    ),
+  })),
 );
 ---
 
@@ -27,9 +42,14 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
       </div>
 
       <div class="hero__media">
-        {home.heroImage
-          ? <img src={home.heroImage} alt={home.heroImageAlt} fetchpriority="high" />
-          : <div class="hero__placeholder" aria-hidden="true"></div>}
+        <SmartImage
+          src={home.heroImage}
+          alt={home.heroImageAlt}
+          widths={[480, 768, 1024, 1400]}
+          sizes="(max-width: 52rem) 100vw, 46rem"
+          loading="eager"
+          fetchpriority="high"
+        />
       </div>
     </div>
   </section>
@@ -39,15 +59,7 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
       <h2>{home.pillarsHeading}</h2>
       {home.pillarsIntro && <p class="lede">{home.pillarsIntro}</p>}
 
-      <ol class="pillars">
-        {home.pillars.map((pillar, index) => (
-          <li class="pillar">
-            <span class="pillar__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-            <h3>{pillar.title}</h3>
-            <p>{pillar.body}</p>
-          </li>
-        ))}
-      </ol>
+      <Pillars pillars={pillars} />
     </div>
   </section>
 
@@ -76,7 +88,15 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
 
   <section class="section feature">
     <div class="shell feature__inner">
-      <div class="feature__media" aria-hidden="true"></div>
+      <div class="feature__media">
+        <SmartImage
+          src={home.featureImage}
+          alt={home.featureImageAlt}
+          widths={[400, 640, 900]}
+          sizes="(max-width: 52rem) 100vw, 420px"
+          aspect="1"
+        />
+      </div>
       <div class="feature__copy">
         <p class="eyebrow">Weaving Workshops</p>
         <h2>{home.featureHeading}</h2>
@@ -128,8 +148,8 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
 
   .hero__text { color: var(--ink-soft); }
 
-  .hero__media img,
-  .hero__placeholder {
+  .hero__media :global(img),
+  .hero__media :global(.placeholder) {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
@@ -137,8 +157,8 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
   }
 
   @media (max-width: 52rem) {
-    .hero__media img,
-    .hero__placeholder { aspect-ratio: 16 / 10; }
+    .hero__media :global(img),
+    .hero__media :global(.placeholder) { aspect-ratio: 16 / 10; }
   }
 
   .hero__placeholder {
@@ -148,27 +168,6 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
       var(--paper-deep);
   }
 
-  .pillars {
-    list-style: none;
-    margin: 3rem 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2.5rem;
-  }
-
-  .pillar { padding-top: 1.25rem; border-top: 2px solid var(--sage-pale); }
-
-  .pillar__index {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 0.875rem;
-    color: var(--clay);
-    margin-bottom: 0.75rem;
-  }
-
-  .pillar h3 { margin-bottom: 0.4em; }
-  .pillar p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0; }
 
   .grid {
     display: grid;
@@ -188,17 +187,17 @@ const programs = (await getCollection('programs', ({ data }) => !data.draft)).so
     .feature__inner { grid-template-columns: 1fr; }
   }
 
-  .feature__media {
+  .feature__media :global(img),
+  .feature__media :global(.placeholder) {
+    width: 100%;
     aspect-ratio: 1;
+    object-fit: cover;
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--clay) 35%, transparent), transparent 55%),
-      radial-gradient(circle at 20% 75%, color-mix(in srgb, var(--sage) 40%, transparent), transparent 50%),
-      var(--paper-deep);
   }
 
   @media (max-width: 52rem) {
-    .feature__media { aspect-ratio: 16 / 9; }
+    .feature__media :global(img),
+    .feature__media :global(.placeholder) { aspect-ratio: 16 / 9; }
   }
 
   .closing { text-align: center; }

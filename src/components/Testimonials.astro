@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import Quote from './shared/Quote';
 
 interface Props {
   heading?: string;
@@ -24,13 +25,7 @@ const items = limit ? all.slice(0, limit) : all;
       <h2>{heading}</h2>
       <div class="quotes">
         {items.map(({ data }) => (
-          <figure class="quote">
-            <blockquote>{data.quote}</blockquote>
-            <figcaption>
-              <span class="quote__author">{data.author}</span>
-              {data.role && <span class="quote__role">{data.role}</span>}
-            </figcaption>
-          </figure>
+          <Quote quote={data.quote} author={data.author} role={data.role} />
         ))}
       </div>
 
@@ -50,20 +45,4 @@ const items = limit ? all.slice(0, limit) : all;
     gap: 2.5rem;
     margin-top: 2.5rem;
   }
-
-  .quote { margin: 0; }
-
-  .quote blockquote {
-    margin: 0 0 1.25rem;
-    padding-left: 1.4rem;
-    border-left: 3px solid var(--ochre);
-    font-family: var(--font-display);
-    font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.2rem);
-    line-height: 1.5;
-    color: var(--ink);
-  }
-
-  .quote figcaption { padding-left: calc(1.4rem + 3px); }
-  .quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
-  .quote__role { display: block; font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.15rem; }
 </style>

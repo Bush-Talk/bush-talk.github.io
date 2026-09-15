@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/uploads/bush-talk-logo.png';
 import { site } from '../lib/site';
 
 const nav = [
@@ -16,8 +18,11 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
 <header class="site-header">
   <div class="shell site-header__inner">
     <a class="wordmark" href="/">
-      <span class="wordmark__name">{site.name}</span>
-      <span class="wordmark__tag">{site.tagline}</span>
+      <Image class="wordmark__logo" src={logo} alt="" widths={[56, 112]} sizes="56px" loading="eager" />
+      <span class="wordmark__text">
+        <span class="wordmark__name">{site.name}</span>
+        <span class="wordmark__tag">{site.tagline}</span>
+      </span>
     </a>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
@@ -57,7 +62,20 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
     min-height: 4.5rem;
   }
 
-  .wordmark { text-decoration: none; color: var(--ink); line-height: 1.1; }
+  .wordmark {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .wordmark__logo { width: 44px; height: 44px; object-fit: contain; }
+
+  @media (max-width: 26rem) {
+    .wordmark__logo { width: 36px; height: 36px; }
+  }
   .wordmark__name {
     display: block;
     font-family: var(--font-display);
