@@ -75,9 +75,11 @@ const facts = [
         <div class="aside__cta">
           <p>Interested in this program?</p>
           <a class="btn btn--primary" href="/contact">Make an enquiry</a>
-          <p class="aside__alt">
-            Or call <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
-          </p>
+          {site.phone && (
+            <p class="aside__alt">
+              Or call <a href={`tel:${site.phoneHref || site.phone}`}>{site.phone}</a>
+            </p>
+          )}
         </div>
       </aside>
     </div>

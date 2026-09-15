@@ -1,68 +1,73 @@
 import { z } from 'zod';
 import siteData from '../data/site.json';
 import homeData from '../data/home.json';
+import { blankable, text, softEmail, softUrl } from './schema';
 
 /**
  * Singletons — one-off content that isn't a list, so it doesn't warrant a
- * content collection. Parsed through Zod so a bad CMS edit fails the build
- * loudly instead of rendering an empty page.
+ * content collection.
  *
- * Optional text fields are modelled as "string that may be empty" rather than
- * `.optional()`, because the CMS writes "" for a cleared field, not null.
+ * Everything the editor can clear is modelled as "may be empty" rather than
+ * required, and the email/URL fields degrade to '' rather than throwing. See
+ * lib/schema.ts: a cleared field must never be able to fail the build.
  */
 
-const optionalText = z.string().default('');
-const linkSchema = z.object({ label: z.string(), href: z.string() });
+const linkSchema = z.object({ label: text, href: text });
 
 const siteSchema = z.object({
   name: z.string(),
-  tagline: z.string(),
-  description: z.string(),
-  url: z.url(),
-  contactName: z.string(),
-  email: z.email(),
-  phone: z.string(),
-  phoneHref: z.string(),
-  hours: z.string(),
-  locations: z.array(z.string()).default([]),
-  acknowledgement: z.string(),
-  footerTagline: z.string(),
-  photoCredit: optionalText,
-  social: z.array(z.object({ label: z.string(), url: z.url() })).default([]),
+  tagline: text,
+  description: text,
+  url: softUrl,
+  contactName: text,
+  email: softEmail,
+  phone: text,
+  phoneHref: text,
+  hours: text,
+  locations: z.array(z.string()).catch([]).default([]),
+  acknowledgement: text,
+  footerTagline: text,
+  photoCredit: text,
+  social: z
+    .array(z.object({ label: text, url: softUrl }))
+    .catch([])
+    .default([])
+    // A social row with no label or no URL is half-filled, not a link.
+    .transform((rows) => rows.filter((r) => r.label && r.url)),
+});
+
+const pillarSchema = z.object({
+  title: text,
+  body: text,
+  image: text,
+  imageAlt: text,
 });
 
 const homeSchema = z.object({
-  heroEyebrow: optionalText,
-  heroHeading: z.string(),
-  heroSubheading: optionalText,
-  heroText: z.string(),
-  heroImage: optionalText,
-  heroImageAlt: optionalText,
+  heroEyebrow: text,
+  heroHeading: text,
+  heroSubheading: text,
+  heroText: text,
+  heroImage: text,
+  heroImageAlt: text,
   primaryCta: linkSchema,
-  secondaryCta: linkSchema.optional(),
+  secondaryCta: blankable(linkSchema),
 
-  pillarsHeading: z.string(),
-  pillarsIntro: optionalText,
-  pillars: z.array(
-    z.object({
-      title: z.string(),
-      body: z.string(),
-      image: optionalText,
-      imageAlt: optionalText,
-    }),
-  ),
+  pillarsHeading: text,
+  pillarsIntro: text,
+  pillars: z.array(pillarSchema).catch([]).default([]),
 
-  programsHeading: z.string(),
-  programsIntro: optionalText,
+  programsHeading: text,
+  programsIntro: text,
 
-  featureHeading: z.string(),
-  featureText: z.string(),
-  featureImage: optionalText,
-  featureImageAlt: optionalText,
+  featureHeading: text,
+  featureText: text,
+  featureImage: text,
+  featureImageAlt: text,
   featureCta: linkSchema,
 
-  closingHeading: z.string(),
-  closingText: z.string(),
+  closingHeading: text,
+  closingText: text,
   closingCta: linkSchema,
 });
 

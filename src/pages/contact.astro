@@ -21,19 +21,31 @@ import { site } from '../lib/site';
       </div>
 
       <aside class="details">
-        <h2>Direct</h2>
-        <ul>
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={`tel:${site.phoneHref}`}>{site.phone}</a></li>
-        </ul>
+        {(site.email || site.phone) && (
+          <>
+            <h2>Direct</h2>
+            <ul>
+              {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
+              {site.phone && <li><a href={`tel:${site.phoneHref || site.phone}`}>{site.phone}</a></li>}
+            </ul>
+          </>
+        )}
 
-        <h2>Hours</h2>
-        <p>{site.hours}</p>
+        {site.hours && (
+          <>
+            <h2>Hours</h2>
+            <p>{site.hours}</p>
+          </>
+        )}
 
-        <h2>Where we work</h2>
-        <ul>
-          {site.locations.map((place) => <li>{place}</li>)}
-        </ul>
+        {site.locations.length > 0 && (
+          <>
+            <h2>Where we work</h2>
+            <ul>
+              {site.locations.map((place) => <li>{place}</li>)}
+            </ul>
+          </>
+        )}
       </aside>
     </div>
   </section>

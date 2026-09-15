@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 import { glob } from 'astro/loaders';
+import { blankable, numberWithDefault, boolWithDefault } from './lib/schema';
 
 /**
  * Every field defined here shows up as a form field in the CMS at /admin.
@@ -14,15 +15,15 @@ const programs = defineCollection({
     title: z.string(),
     summary: z.string(),
     // Controls ordering on the programs index. Lower numbers come first.
-    order: z.number().default(50),
-    image: z.string().optional(),
-    imageAlt: z.string().optional(),
+    order: numberWithDefault(50),
+    image: blankable(z.string()),
+    imageAlt: z.string().default(''),
     // Free text, not a number — "$150 for one hour session", "POA" all happen.
-    price: z.string().optional(),
-    duration: z.string().optional(),
-    audience: z.string().optional(),
+    price: blankable(z.string()),
+    duration: blankable(z.string()),
+    audience: blankable(z.string()),
     includes: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
+    draft: boolWithDefault(false),
   }),
 });
 
@@ -35,18 +36,18 @@ const workshops = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/workshops' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date().optional(),
-    dateLabel: z.string().optional(),
-    time: z.string().optional(),
-    location: z.string().optional(),
-    price: z.string().optional(),
-    duration: z.string().optional(),
+    date: blankable(z.coerce.date()),
+    dateLabel: blankable(z.string()),
+    time: blankable(z.string()),
+    location: blankable(z.string()),
+    price: blankable(z.string()),
+    duration: blankable(z.string()),
     summary: z.string(),
-    bookingUrl: z.string().optional(),
-    image: z.string().optional(),
-    imageAlt: z.string().optional(),
-    order: z.number().default(50),
-    draft: z.boolean().default(false),
+    bookingUrl: blankable(z.string()),
+    image: blankable(z.string()),
+    imageAlt: z.string().default(''),
+    order: numberWithDefault(50),
+    draft: boolWithDefault(false),
   }),
 });
 
@@ -55,12 +56,15 @@ const testimonials = defineCollection({
   schema: z.object({
     quote: z.string(),
     author: z.string(),
-    role: z.string().optional(),
+    role: blankable(z.string()),
     // Mirrors how the reviews are grouped on the current site.
-    category: z.enum(['principals', 'teachers', 'kids', 'participants']).default('participants'),
-    featured: z.boolean().default(false),
-    order: z.number().default(50),
-    draft: z.boolean().default(false),
+    category: z
+      .enum(['principals', 'teachers', 'kids', 'participants'])
+      .catch('participants')
+      .default('participants'),
+    featured: boolWithDefault(false),
+    order: numberWithDefault(50),
+    draft: boolWithDefault(false),
   }),
 });
 
@@ -74,10 +78,10 @@ const gallery = defineCollection({
   schema: z.object({
     image: z.string(),
     imageAlt: z.string().default(''),
-    caption: z.string().optional(),
-    group: z.enum(['weaving', 'bush']).default('bush'),
-    order: z.number().default(50),
-    draft: z.boolean().default(false),
+    caption: blankable(z.string()),
+    group: z.enum(['weaving', 'bush']).catch('bush').default('bush'),
+    order: numberWithDefault(50),
+    draft: boolWithDefault(false),
   }),
 });
 
@@ -85,10 +89,10 @@ const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
-    image: z.string().optional(),
-    imageAlt: z.string().optional(),
-    draft: z.boolean().default(false),
+    description: blankable(z.string()),
+    image: blankable(z.string()),
+    imageAlt: z.string().default(''),
+    draft: boolWithDefault(false),
   }),
 });
 

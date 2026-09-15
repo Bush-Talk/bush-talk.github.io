@@ -104,15 +104,16 @@ const enquiryTypes = [
     <p class="enquiry__warn">
       <strong>Not wired up yet.</strong> Add <code>PUBLIC_HUBSPOT_PORTAL_ID</code> and
       <code>PUBLIC_HUBSPOT_FORM_GUID</code> to <code>.env</code>. Until then this form
-      won't send — people can still reach us at <a href={`mailto:${site.email}`}>{site.email}</a>.
+      won't send{site.email && <> — people can still reach us at <a href={`mailto:${site.email}`}>{site.email}</a></>}.
     </p>
   )}
 </form>
 
 <noscript>
   <p>
-    This form needs JavaScript. You can email us directly at
-    <a href={`mailto:${site.email}`}>{site.email}</a> or call {site.phone}.
+    This form needs JavaScript. You can reach us
+    {site.email && <> by email at <a href={`mailto:${site.email}`}>{site.email}</a></>}
+    {site.phone && <> or on {site.phone}</>}.
   </p>
 </noscript>
 
