@@ -1,0 +1,46 @@
+{
+  "heroEyebrow": "",
+  "heroHeading": "Nature-Based Wellbeing programs",
+  "heroSubheading": "Bush Talk programs facilitate deep and mindful connection to nature, to others and to self.",
+  "heroText": "Bush Talk offers immersive nature-based experiences that nurture self-discovery, resilience, and deep connection with others. We provide a supportive space for personal growth and community, empowering individuals to rediscover their sense of belonging and connection with the natural world, the land we live on.",
+  "heroImage": "",
+  "heroImageAlt": "",
+  "primaryCta": {
+    "label": "Book Now",
+    "href": "/contact"
+  },
+  "secondaryCta": {
+    "label": "Explore programs",
+    "href": "/programs"
+  },
+  "pillarsHeading": "Enhancing Whole-Person Development",
+  "pillarsIntro": "",
+  "pillars": [
+    {
+      "title": "Connection to self",
+      "body": "Through guided experiences and gentle teaching, participants learn to slow down, notice their thoughts and feelings, and understand how these influence their behaviour. Explicitly teaching self-awareness supports developing strategies for stronger emotional regulation and personal growth."
+    },
+    {
+      "title": "Connection to others",
+      "body": "Through shared experiences and guided practices, participants are guided to slow down, listen deeply, and connect with others in authentic and supportive ways. As barriers soften, honest communication, empathy and deep connection unfold, leading to more meaningful relationships and stronger communities."
+    },
+    {
+      "title": "Connection to Nature",
+      "body": "Spending time in nature helps participants slow down, notice the world around them, deepening their respect for the natural world. Learning basic bush skills builds confidence and helps people feel comfortable and capable outdoors. These practical, hands-on experiences create a deep connection to the land and sense of belonging to place."
+    }
+  ],
+  "programsHeading": "Flexible Learning Programs",
+  "programsIntro": "All programs are designed to be flexible, so together we can design the best fit for your kinder, school, group or family.",
+  "featureHeading": "Healing Art and Earth Wisdom for Young Minds",
+  "featureText": "Our incursions invite the sanctuary of the Australian bush into schools and community centers. Through immersive workshops, we guide children in the meditative craft of fiber weaving and ecological storytelling. By engaging with natural materials, students cultivate a deep sense of wellbeing, patience, and a lasting connection to the environment around them.",
+  "featureCta": {
+    "label": "See weaving workshops",
+    "href": "/weaving-workshops"
+  },
+  "closingHeading": "Connect With Nature",
+  "closingText": "Ready to weave new stories or embark on a bush adventure? Reach out for workshop registrations, educational incursions, or custom programs.",
+  "closingCta": {
+    "label": "Send a Message",
+    "href": "/contact"
+  }
+}

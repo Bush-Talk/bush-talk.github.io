@@ -1,0 +1,36 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * Catch-all for free-form pages managed in the CMS (About, Policies, and so on).
+ * Anything added to src/content/pages/ gets a URL from its filename.
+ */
+export const getStaticPaths = (async () => {
+  const pages = await getCollection('pages', ({ data }) => !data.draft);
+  return pages.map((page) => ({
+    params: { slug: page.id },
+    props: { page },
+  }));
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<BaseLayout title={page.data.title} description={page.data.description} image={page.data.image}>
+  <section class="section">
+    <div class="shell shell--narrow">
+      <h1>{page.data.title}</h1>
+      {page.data.description && <p class="lede">{page.data.description}</p>}
+      <div class="prose page-body">
+        <Content />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-body { margin-top: 2.5rem; }
+</style>

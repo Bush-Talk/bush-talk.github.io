@@ -1,0 +1,158 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { home, site } from '../lib/site';
+
+const all = (await getCollection('workshops', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// A dated workshop drops off once it has passed; undated ones (group bookings,
+// individual sessions) always show. Saves having to delete old entries.
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const upcoming = all.filter((w) => !w.data.date || w.data.date >= today);
+const dated = upcoming.filter((w) => w.data.date);
+const ongoing = upcoming.filter((w) => !w.data.date);
+
+const rendered = await Promise.all(
+  upcoming.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+const contentFor = (id: string) => rendered.find((r) => r.entry.id === id)?.Content;
+---
+
+<BaseLayout
+  title="Weaving Workshops"
+  description={home.featureText}
+>
+  <section class="section">
+    <div class="shell shell--narrow">
+      <p class="eyebrow">Weaving Workshops</p>
+      <h1>{home.featureHeading}</h1>
+      <p class="lede">{home.featureText}</p>
+      <p class="pull">"It was just what our souls needed."</p>
+    </div>
+  </section>
+
+  {dated.length > 0 && (
+    <section class="section section--warm">
+      <div class="shell">
+        <h2>Upcoming weaving workshops</h2>
+        <div class="grid">
+          {dated.map(({ id, data }) => {
+            const Content = contentFor(id);
+            const when = [data.dateLabel, data.time].filter(Boolean).join(' ');
+            return (
+              <article class="workshop">
+                <h3>{data.title}</h3>
+                {(when || data.location) && (
+                  <p class="workshop__when">
+                    {[when, data.location].filter(Boolean).join('. ')}
+                  </p>
+                )}
+                <div class="workshop__body prose">{Content && <Content />}</div>
+                {(data.price || data.duration) && (
+                  <p class="workshop__price">
+                    {[data.duration, data.price].filter(Boolean).join(' · ')}
+                  </p>
+                )}
+                <a class="btn btn--secondary" href={data.bookingUrl ?? '/contact'}>
+                  {data.bookingUrl ? 'Book now' : 'Enquire'}
+                </a>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {ongoing.length > 0 && (
+    <section class="section">
+      <div class="shell">
+        <h2>Always available</h2>
+        <div class="grid">
+          {ongoing.map(({ id, data }) => {
+            const Content = contentFor(id);
+            return (
+              <article class="workshop">
+                <h3>{data.title}</h3>
+                <div class="workshop__body prose">{Content && <Content />}</div>
+                {(data.price || data.duration) && (
+                  <p class="workshop__price">
+                    {[data.duration, data.price].filter(Boolean).join(' · ')}
+                  </p>
+                )}
+                <a class="btn btn--secondary" href="/contact">Enquire</a>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {upcoming.length === 0 && (
+    <section class="section">
+      <div class="shell shell--narrow">
+        <p class="lede">
+          No workshops scheduled right now. Get in touch at
+          <a href={`mailto:${site.email}`}>{site.email}</a> and we'll let you know when the
+          next one is announced.
+        </p>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .pull {
+    margin-top: 2.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 1.2rem + 0.9vw, 1.9rem);
+    font-style: italic;
+    color: var(--clay-deep);
+    line-height: 1.35;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2.5rem;
+  }
+
+  .workshop {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .workshop h3 { margin-bottom: 0.4rem; }
+
+  .workshop__when {
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 1rem;
+  }
+
+  .workshop__body { flex: 1; font-size: 0.9375rem; color: var(--ink-soft); }
+  .workshop__body :global(p:last-child) { margin-bottom: 0; }
+  .workshop__body :global(ul) { font-size: 0.9375rem; }
+
+  .workshop__price {
+    margin: 1.25rem 0 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  .workshop .btn { align-self: flex-start; }
+</style>

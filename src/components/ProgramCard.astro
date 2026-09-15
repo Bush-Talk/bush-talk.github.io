@@ -1,0 +1,96 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  summary: string;
+  image?: string;
+  imageAlt?: string;
+  price?: string;
+  duration?: string;
+}
+
+const { href, title, summary, image, imageAlt, price, duration } = Astro.props;
+const meta = [duration, price].filter(Boolean);
+---
+
+<article class="card">
+  <a class="card__link" href={href}>
+    <div class="card__media">
+      {image
+        ? <img src={image} alt={imageAlt ?? ''} loading="lazy" decoding="async" />
+        : <div class="card__placeholder" aria-hidden="true"></div>}
+    </div>
+
+    <div class="card__body">
+      <h3 class="card__title">{title}</h3>
+      <p class="card__summary">{summary}</p>
+      {meta.length > 0 && <p class="card__meta">{meta.join(' · ')}</p>}
+      <span class="card__cue" aria-hidden="true">Read more →</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+  .card:hover { border-color: var(--sage); transform: translateY(-2px); }
+
+  .card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__media { aspect-ratio: 16 / 10; background: var(--paper-deep); overflow: hidden; }
+  .card__media img { width: 100%; height: 100%; object-fit: cover; }
+
+  .card__placeholder {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--sage) 35%, transparent), transparent 55%),
+      radial-gradient(circle at 75% 70%, color-mix(in srgb, var(--ochre) 30%, transparent), transparent 50%),
+      var(--paper-deep);
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .card__title { margin: 0 0 0.5rem; font-size: 1.3rem; }
+
+  .card__summary {
+    margin: 0 0 1rem;
+    color: var(--ink-soft);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    max-width: none;
+  }
+
+  .card__meta {
+    margin: 0 0 1rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--clay);
+    max-width: none;
+  }
+
+  .card__cue {
+    margin-top: auto;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--bark);
+  }
+  .card:hover .card__cue { color: var(--clay-deep); }
+</style>

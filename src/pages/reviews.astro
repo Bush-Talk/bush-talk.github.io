@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const groups = [
+  { key: 'principals', heading: 'From the principals' },
+  { key: 'teachers', heading: 'From the teachers' },
+  { key: 'kids', heading: 'From the kids' },
+  { key: 'participants', heading: 'From participants' },
+] as const;
+
+const all = (await getCollection('testimonials', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const sections = groups
+  .map((group) => ({ ...group, items: all.filter((t) => t.data.category === group.key) }))
+  .filter((group) => group.items.length > 0);
+---
+
+<BaseLayout
+  title="Reviews"
+  description="What principals, teachers and kids say about Bush Talk programs."
+>
+  <section class="section">
+    <div class="shell">
+      <p class="eyebrow">Reviews</p>
+      <h1>What people say</h1>
+
+      {sections.map((group) => (
+        <section class="group">
+          <h2>{group.heading}</h2>
+          <div class="quotes">
+            {group.items.map(({ data }) => (
+              <figure class="quote">
+                <blockquote>{data.quote}</blockquote>
+                <figcaption>
+                  <span class="quote__author">{data.author}</span>
+                  {data.role && <span class="quote__role">{data.role}</span>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .group { margin-top: clamp(3rem, 6vw, 4.5rem); }
+
+  .group h2 {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .quotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .quote { margin: 0; }
+
+  .quote blockquote {
+    margin: 0 0 1rem;
+    padding-left: 1.4rem;
+    border-left: 3px solid var(--ochre);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    line-height: 1.55;
+  }
+
+  .quote figcaption { padding-left: calc(1.4rem + 3px); }
+  .quote__author { display: block; font-weight: 500; font-size: 0.9375rem; }
+  .quote__role { display: block; font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.15rem; }
+</style>

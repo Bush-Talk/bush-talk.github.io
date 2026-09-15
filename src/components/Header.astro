@@ -1,0 +1,163 @@
+---
+import { site } from '../lib/site';
+
+const nav = [
+  { label: 'Programs', href: '/programs' },
+  { label: 'Weaving Workshops', href: '/weaving-workshops' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="wordmark" href="/">
+      <span class="wordmark__name">{site.name}</span>
+      <span class="wordmark__tag">{site.tagline}</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="visually-hidden">Menu</span>
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.5rem;
+  }
+
+  .wordmark { text-decoration: none; color: var(--ink); line-height: 1.1; }
+  .wordmark__name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .wordmark__tag {
+    display: block;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-top: 0.15rem;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    padding-block: 0.4rem;
+    border-bottom: 1px solid transparent;
+  }
+  .site-nav a:hover { color: var(--ink); }
+  .site-nav a[aria-current='page'] { color: var(--bark); border-bottom-color: var(--ochre); }
+
+  /* Toggle is hidden until the nav needs to collapse. */
+  .nav-toggle { display: none; }
+
+  @media (max-width: 58rem) {
+    .nav-toggle {
+      display: grid;
+      place-items: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .nav-toggle__bars,
+    .nav-toggle__bars::before,
+    .nav-toggle__bars::after {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+    .nav-toggle__bars { position: relative; }
+    .nav-toggle__bars::before,
+    .nav-toggle__bars::after { content: ''; position: absolute; left: 0; }
+    .nav-toggle__bars::before { top: -5px; }
+    .nav-toggle__bars::after { top: 5px; }
+
+    .nav-toggle[aria-expanded='true'] .nav-toggle__bars { background: transparent; }
+    .nav-toggle[aria-expanded='true'] .nav-toggle__bars::before { transform: translateY(5px) rotate(45deg); }
+    .nav-toggle[aria-expanded='true'] .nav-toggle__bars::after { transform: translateY(-5px) rotate(-45deg); }
+
+    .site-nav {
+      display: none;
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      padding: 0.5rem var(--gutter) 1.5rem;
+    }
+    .site-nav[data-open] { display: block; }
+    .site-nav ul { flex-direction: column; gap: 0; }
+    .site-nav li + li { border-top: 1px solid var(--line); }
+    .site-nav a { display: block; padding-block: 0.9rem; font-size: 1.05rem; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.querySelector<HTMLElement>('#site-nav');
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    nav?.toggleAttribute('data-open', !open);
+  });
+
+  // Close on Escape so keyboard users aren't trapped behind the panel.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (toggle?.getAttribute('aria-expanded') !== 'true') return;
+    toggle.setAttribute('aria-expanded', 'false');
+    nav?.removeAttribute('data-open');
+    toggle.focus();
+  });
+</script>

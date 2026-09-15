@@ -1,0 +1,268 @@
+# -----------------------------------------------------------------------------
+# Sveltia CMS — the editor Bek uses at /admin
+#
+# This file and src/content.config.ts describe the SAME content twice. Sveltia
+# cannot read the Astro schemas, so when you change one, change the other, or
+# the build will reject what the editor saves.
+# -----------------------------------------------------------------------------
+
+backend:
+  name: github
+  repo: OWNER/bushtalk # <- change to your GitHub owner/repo
+  branch: main
+  # Uncomment once the auth worker is deployed. Without it, sign-in falls back
+  # to pasting a personal access token, which is fine for your own testing.
+  # base_url: https://YOUR-WORKER.workers.dev
+
+# No local_backend here: that's a Decap option Sveltia ignores. To edit a local
+# checkout, run `npm run dev` and use "Work with Local Repository" at /admin —
+# Sveltia reads and writes the files directly via the File System Access API
+# (Chrome/Edge only).
+
+site_url: https://bushtalkinfo.com
+display_url: https://bushtalkinfo.com
+
+media_folder: public/uploads
+public_folder: /uploads
+
+# No preview templates defined, so an empty preview pane would just confuse.
+editor:
+  preview: false
+
+collections:
+  # ---------------------------------------------------------------------------
+  - name: programs
+    label: Programs
+    label_singular: Program
+    folder: src/content/programs
+    create: true
+    slug: '{{slug}}'
+    format: frontmatter
+    summary: '{{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: summary
+        label: Short summary
+        widget: text
+        hint: One or two sentences. Shown on program cards and in search results.
+      - name: order
+        label: Sort order
+        widget: number
+        value_type: int
+        default: 50
+        hint: Lower numbers appear first.
+      - { name: image, label: Image, widget: image, required: false }
+      - name: imageAlt
+        label: Image description
+        widget: string
+        required: false
+        hint: Describes the image for people using a screen reader.
+      - name: price
+        label: Price
+        widget: string
+        required: false
+        hint: 'Free text, e.g. "$150 for one hour session" or "Please contact for more information".'
+      - { name: duration, label: Duration, widget: string, required: false }
+      - { name: audience, label: Who it suits, widget: string, required: false }
+      - name: includes
+        label: What's included
+        widget: list
+        required: false
+        field: { name: item, label: Item, widget: string }
+      - name: draft
+        label: Draft
+        widget: boolean
+        default: false
+        hint: Ticked means it stays off the live site.
+      - { name: body, label: Page content, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  - name: workshops
+    label: Weaving workshops
+    label_singular: Workshop
+    folder: src/content/workshops
+    create: true
+    slug: '{{slug}}'
+    format: frontmatter
+    summary: '{{title}}'
+    sortable_fields: [order, date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: summary
+        label: Short summary
+        widget: text
+      - name: date
+        label: Date
+        widget: datetime
+        required: false
+        date_format: YYYY-MM-DD
+        time_format: false
+        picker_utc: false
+        hint: Leave empty for ongoing offerings. Dated workshops disappear from the site once the date has passed.
+      - name: dateLabel
+        label: Date as written
+        widget: string
+        required: false
+        hint: 'How it should read on the page, e.g. "May 9th and June 6th".'
+      - { name: time, label: Time, widget: string, required: false }
+      - { name: location, label: Location, widget: string, required: false }
+      - { name: duration, label: Duration, widget: string, required: false }
+      - { name: price, label: Price, widget: string, required: false }
+      - name: bookingUrl
+        label: Booking link
+        widget: string
+        required: false
+        hint: Leave empty to send people to the contact form instead.
+      - { name: image, label: Image, widget: image, required: false }
+      - { name: imageAlt, label: Image description, widget: string, required: false }
+      - { name: order, label: Sort order, widget: number, value_type: int, default: 50 }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+      - { name: body, label: Details, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  - name: testimonials
+    label: Reviews
+    label_singular: Review
+    folder: src/content/testimonials
+    create: true
+    slug: '{{slug}}'
+    format: frontmatter
+    summary: '{{author}} — {{quote}}'
+    sortable_fields: [order, author]
+    fields:
+      - { name: quote, label: Quote, widget: text }
+      - { name: author, label: Who said it, widget: string }
+      - name: role
+        label: Their role
+        widget: string
+        required: false
+        hint: 'e.g. "Principal of The Village School". Leave empty for kids.'
+      - name: category
+        label: Group
+        widget: select
+        default: participants
+        options:
+          - { label: From the principals, value: principals }
+          - { label: From the teachers, value: teachers }
+          - { label: From the kids, value: kids }
+          - { label: From participants, value: participants }
+      - name: featured
+        label: Show on the home page
+        widget: boolean
+        default: false
+      - { name: order, label: Sort order, widget: number, value_type: int, default: 50 }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+
+  # ---------------------------------------------------------------------------
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: src/content/pages
+    create: true
+    slug: '{{slug}}'
+    format: frontmatter
+    summary: '{{title}}'
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: description
+        label: Short description
+        widget: text
+        required: false
+        hint: Shown under the heading, and used by Google.
+      - { name: image, label: Image, widget: image, required: false }
+      - { name: imageAlt, label: Image description, widget: string, required: false }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+      - { name: body, label: Page content, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  - name: settings
+    label: Site settings
+    files:
+      - name: site
+        label: Contact & footer
+        file: src/data/site.json
+        fields:
+          - { name: name, label: Site name, widget: string }
+          - { name: tagline, label: Tagline, widget: string }
+          - name: description
+            label: Site description
+            widget: text
+            hint: Used by Google and when the site is shared on social media.
+          - { name: url, label: Site URL, widget: string }
+          - { name: contactName, label: Contact name, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: phone, label: Phone (as displayed), widget: string }
+          - name: phoneHref
+            label: Phone (for dialling)
+            widget: string
+            hint: 'International format, e.g. +61425756949.'
+          - { name: hours, label: Office hours, widget: string }
+          - name: locations
+            label: Where we work
+            widget: list
+            field: { name: item, label: Place, widget: string }
+          - { name: acknowledgement, label: Acknowledgement of Country, widget: text }
+          - { name: footerTagline, label: Footer tagline, widget: string }
+          - { name: photoCredit, label: Photo credit, widget: string, required: false }
+          - name: social
+            label: Social links
+            widget: list
+            required: false
+            fields:
+              - { name: label, label: Name, widget: string }
+              - { name: url, label: URL, widget: string }
+
+      - name: home
+        label: Home page
+        file: src/data/home.json
+        fields:
+          - { name: heroEyebrow, label: Small heading above the title, widget: string }
+          - { name: heroHeading, label: Main heading, widget: string }
+          - { name: heroSubheading, label: Subheading, widget: text, required: false }
+          - { name: heroText, label: Intro paragraph, widget: text }
+          - { name: heroImage, label: Hero image, widget: image, required: false }
+          - { name: heroImageAlt, label: Hero image description, widget: string, required: false }
+          - name: primaryCta
+            label: Main button
+            widget: object
+            fields:
+              - { name: label, label: Button text, widget: string }
+              - { name: href, label: Links to, widget: string }
+          - name: secondaryCta
+            label: Second button
+            widget: object
+            required: false
+            fields:
+              - { name: label, label: Button text, widget: string }
+              - { name: href, label: Links to, widget: string }
+
+          - { name: pillarsHeading, label: 'Section 2: heading', widget: string }
+          - { name: pillarsIntro, label: 'Section 2: intro', widget: text, required: false }
+          - name: pillars
+            label: 'Section 2: the three connections'
+            widget: list
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: body, label: Text, widget: text }
+
+          - { name: programsHeading, label: 'Section 3: heading', widget: string }
+          - { name: programsIntro, label: 'Section 3: intro', widget: text, required: false }
+
+          - { name: featureHeading, label: 'Section 4: heading', widget: string }
+          - { name: featureText, label: 'Section 4: text', widget: text }
+          - name: featureCta
+            label: 'Section 4: button'
+            widget: object
+            fields:
+              - { name: label, label: Button text, widget: string }
+              - { name: href, label: Links to, widget: string }
+
+          - { name: closingHeading, label: 'Closing: heading', widget: string }
+          - { name: closingText, label: 'Closing: text', widget: text }
+          - name: closingCta
+            label: 'Closing: button'
+            widget: object
+            fields:
+              - { name: label, label: Button text, widget: string }
+              - { name: href, label: Links to, widget: string }

@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProgramCard from '../../components/ProgramCard.astro';
+import { home } from '../../lib/site';
+
+const programs = (await getCollection('programs', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Programs"
+  description="Bush skills, weaving workshops and wellbeing programs for schools, families and individuals."
+>
+  <section class="section">
+    <div class="shell">
+      <p class="eyebrow">Programs</p>
+      <h1>{home.programsHeading}</h1>
+      {home.programsIntro && <p class="lede">{home.programsIntro}</p>}
+
+      <div class="grid">
+        {programs.map((program) => (
+          <ProgramCard
+            href={`/programs/${program.id}`}
+            title={program.data.title}
+            summary={program.data.summary}
+            image={program.data.image}
+            imageAlt={program.data.imageAlt}
+            price={program.data.price}
+            duration={program.data.duration}
+          />
+        ))}
+      </div>
+
+      {programs.length === 0 && (
+        <p class="lede">No programs published yet — add one in the editor at <code>/admin</code>.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    margin-top: 3rem;
+  }
+</style>

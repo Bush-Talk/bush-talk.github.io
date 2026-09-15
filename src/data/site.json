@@ -1,0 +1,19 @@
+{
+  "name": "Bush Talk",
+  "tagline": "Create · Reflect · Connect",
+  "description": "Bush Talk programs facilitate deep and mindful connection to nature, to others and to self.",
+  "url": "https://bushtalkinfo.com",
+  "contactName": "Rebekah Mitchell",
+  "email": "rebekah@bushtalkinfo.com",
+  "phone": "0425 756 949",
+  "phoneHref": "+61425756949",
+  "hours": "Mon–Thursday: 9:00 am – 5:00 pm",
+  "locations": ["Warrandyte, VIC", "Croydon North, VIC"],
+  "acknowledgement": "Bush Talk honours the people that have walked this land before us and on whose land we walk and play. We pay our respect to the Wurundjeri people and hope to grow in our knowledge and love for this land.",
+  "footerTagline": "Woven with Intention • Nurtured in Nature",
+  "photoCredit": "Photo credit @heirloomsbygulshah",
+  "social": [
+    { "label": "Instagram", "url": "https://instagram.com/" },
+    { "label": "Facebook", "url": "https://facebook.com/" }
+  ]
+}

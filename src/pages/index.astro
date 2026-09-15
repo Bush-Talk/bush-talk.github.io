@@ -1,0 +1,207 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProgramCard from '../components/ProgramCard.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { home } from '../lib/site';
+
+const programs = (await getCollection('programs', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="shell hero__inner">
+      <div class="hero__copy">
+        {home.heroEyebrow && <p class="eyebrow">{home.heroEyebrow}</p>}
+        <h1>{home.heroHeading}</h1>
+        {home.heroSubheading && <p class="hero__sub">{home.heroSubheading}</p>}
+        <p class="hero__text">{home.heroText}</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href={home.primaryCta.href}>{home.primaryCta.label}</a>
+          {home.secondaryCta && (
+            <a class="btn btn--secondary" href={home.secondaryCta.href}>{home.secondaryCta.label}</a>
+          )}
+        </div>
+      </div>
+
+      <div class="hero__media">
+        {home.heroImage
+          ? <img src={home.heroImage} alt={home.heroImageAlt} fetchpriority="high" />
+          : <div class="hero__placeholder" aria-hidden="true"></div>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <h2>{home.pillarsHeading}</h2>
+      {home.pillarsIntro && <p class="lede">{home.pillarsIntro}</p>}
+
+      <ol class="pillars">
+        {home.pillars.map((pillar, index) => (
+          <li class="pillar">
+            <span class="pillar__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{pillar.title}</h3>
+            <p>{pillar.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {programs.length > 0 && (
+    <section class="section section--warm">
+      <div class="shell">
+        <h2>{home.programsHeading}</h2>
+        {home.programsIntro && <p class="lede">{home.programsIntro}</p>}
+
+        <div class="grid">
+          {programs.map((program) => (
+            <ProgramCard
+              href={`/programs/${program.id}`}
+              title={program.data.title}
+              summary={program.data.summary}
+              image={program.data.image}
+              imageAlt={program.data.imageAlt}
+              price={program.data.price}
+              duration={program.data.duration}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section feature">
+    <div class="shell feature__inner">
+      <div class="feature__media" aria-hidden="true"></div>
+      <div class="feature__copy">
+        <p class="eyebrow">Weaving Workshops</p>
+        <h2>{home.featureHeading}</h2>
+        <p>{home.featureText}</p>
+        <div class="btn-row">
+          <a class="btn btn--secondary" href={home.featureCta.href}>{home.featureCta.label}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials heading="Reviews" featuredOnly showLink />
+
+  <section class="section section--bark">
+    <div class="shell shell--narrow closing">
+      <h2>{home.closingHeading}</h2>
+      <p class="lede">{home.closingText}</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={home.closingCta.href}>{home.closingCta.label}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding-block: clamp(3rem, 7vw, 5.5rem); }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  @media (max-width: 52rem) {
+    .hero__inner { grid-template-columns: 1fr; }
+    .hero__media { order: -1; }
+  }
+
+  .hero__copy h1 { margin-bottom: 0.35em; }
+
+  .hero__sub {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
+    line-height: 1.35;
+    color: var(--bark);
+    margin-bottom: 1.1em;
+  }
+
+  .hero__text { color: var(--ink-soft); }
+
+  .hero__media img,
+  .hero__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  @media (max-width: 52rem) {
+    .hero__media img,
+    .hero__placeholder { aspect-ratio: 16 / 10; }
+  }
+
+  .hero__placeholder {
+    background:
+      radial-gradient(circle at 25% 25%, color-mix(in srgb, var(--sage) 45%, transparent), transparent 55%),
+      radial-gradient(circle at 80% 65%, color-mix(in srgb, var(--ochre) 40%, transparent), transparent 50%),
+      var(--paper-deep);
+  }
+
+  .pillars {
+    list-style: none;
+    margin: 3rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .pillar { padding-top: 1.25rem; border-top: 2px solid var(--sage-pale); }
+
+  .pillar__index {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    color: var(--clay);
+    margin-bottom: 0.75rem;
+  }
+
+  .pillar h3 { margin-bottom: 0.4em; }
+  .pillar p { color: var(--ink-soft); font-size: 0.9375rem; margin: 0; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .feature__inner {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  @media (max-width: 52rem) {
+    .feature__inner { grid-template-columns: 1fr; }
+  }
+
+  .feature__media {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--clay) 35%, transparent), transparent 55%),
+      radial-gradient(circle at 20% 75%, color-mix(in srgb, var(--sage) 40%, transparent), transparent 50%),
+      var(--paper-deep);
+  }
+
+  @media (max-width: 52rem) {
+    .feature__media { aspect-ratio: 16 / 9; }
+  }
+
+  .closing { text-align: center; }
+  .closing p { margin-inline: auto; }
+  .closing .btn-row { justify-content: center; }
+</style>
